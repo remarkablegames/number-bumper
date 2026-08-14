@@ -188,6 +188,8 @@ function tryMoveTo(gridX: number, gridY: number) {
   const operationTile = state.tiles.get(tileKey)
 
   state.player.goToTile(gridX, gridY, () => {
+    state.moves += 1
+
     if (operationTile) {
       const tile = operationTile.tile
       const newValue = applyOperation(
@@ -198,14 +200,13 @@ function tryMoveTo(gridX: number, gridY: number) {
       state.player.setValue(newValue)
       operationTile.consume()
       state.tiles.delete(tileKey)
+
+      if (state.player.value === state.levelData.target) {
+        handleWin()
+      }
     }
 
-    state.moves += 1
     updateUI()
-
-    if (state.player.value === state.levelData.target) {
-      handleWin()
-    }
   })
 }
 
