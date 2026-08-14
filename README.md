@@ -1,13 +1,13 @@
 <p align="center">
-  <img src="public/favicon.png" width="200" alt="Kaplay Template">
+  <img src="public/favicon.png" width="200" alt="Number Bumper">
 </p>
 
-# Kaplay Template
+# Number Bumper
 
 [![release](https://img.shields.io/github/v/release/remarkablegames/number-bumper)](https://github.com/remarkablegames/number-bumper/releases)
 [![build](https://github.com/remarkablegames/number-bumper/actions/workflows/build.yml/badge.svg)](https://github.com/remarkablegames/number-bumper/actions/workflows/build.yml)
 
-<kbd>number-bumper</kbd> is a template for making [KAPLAY](https://kaplayjs.com/) games.
+🔢 **Number Bumper** is a fun math puzzle where you hit the target number by bumping through operation tiles in the right order. With quick levels, instant feedback, and growing difficulty, it’s great practice for mental math and number sense.
 
 Play in the browser:
 
@@ -43,7 +43,7 @@ git grep -l number-bumper | xargs sed -i '' -e 's/number-bumper/my-game/g'
 ```
 
 ```sh
-git grep -l 'Kaplay Template' | xargs sed -i '' -e 's/Kaplay Template/My Game/g'
+git grep -l 'Number Bumper' | xargs sed -i '' -e 's/Number Bumper/My Game/g'
 ```
 
 Update the files:
