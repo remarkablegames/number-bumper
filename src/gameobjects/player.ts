@@ -1,6 +1,6 @@
 import { GAME } from '../constants'
+import { gridToWorld } from '../helpers'
 import type { LevelData } from '../types'
-import { gridToWorld } from '../utils'
 
 export function addPlayer(level: LevelData) {
   const startPosition = gridToWorld(
@@ -80,5 +80,3 @@ export function addPlayer(level: LevelData) {
     },
   })
 }
-
-export type Player = ReturnType<typeof addPlayer>

@@ -1,8 +1,7 @@
 import { GAME, SCENE } from '../constants'
-import type { Player, Tile } from '../gameobjects'
 import { addPlayer, addTile } from '../gameobjects'
-import { applyOperation, generateLevel } from '../helpers/level'
-import type { LevelData } from '../types'
+import { applyOperation, generateLevel } from '../helpers'
+import type { LevelData, Player, Tile } from '../types'
 
 type GameUI = ReturnType<typeof createGameUI>
 

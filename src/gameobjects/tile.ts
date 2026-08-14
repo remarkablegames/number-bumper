@@ -1,10 +1,8 @@
 import { GAME } from '../constants'
+import { gridToWorld } from '../helpers'
 import type { LevelData, TileData } from '../types'
-import { gridToWorld } from '../utils'
 
 const BLANK_TILE_COLOR: [number, number, number] = [0, 0, 0]
-
-export type Tile = ReturnType<typeof addTile>
 
 export function addTile(
   x: number,
