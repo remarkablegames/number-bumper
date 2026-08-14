@@ -23,17 +23,10 @@ function createGameUI(levelData: LevelData) {
   const screenWidth = width()
   const screenHeight = height()
   const padding = GAME.UI_PADDING
-  const panelWidth = 200
   const panelHeight = 44
+  const panelPadding = 24
 
-  const targetPanel = add([
-    rect(panelWidth, panelHeight, { radius: 12 }),
-    color(...GAME.OPERATION_COLORS['*']),
-    pos(screenWidth / 2, padding + panelHeight / 2),
-    anchor('center'),
-    fixed(),
-  ])
-  const targetLabel = targetPanel.add([
+  const targetLabel = make([
     text('Target Score: ' + String(levelData.target), {
       size: 20,
       align: 'center',
@@ -42,6 +35,15 @@ function createGameUI(levelData: LevelData) {
     pos(),
     anchor('center'),
   ])
+
+  const targetPanel = add([
+    rect(targetLabel.width + panelPadding * 2, panelHeight, { radius: 12 }),
+    color(...GAME.OPERATION_COLORS['*']),
+    pos(screenWidth / 2, padding + panelHeight / 2),
+    anchor('center'),
+    fixed(),
+  ])
+  targetPanel.add(targetLabel)
 
   const levelLabel = add([
     text('Level: ' + String(levelData.level), { size: GAME.UI_TEXT_SIZE }),
