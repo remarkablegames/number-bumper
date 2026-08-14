@@ -1,7 +1,7 @@
 {
   "name": "Number Bumper",
   "short_name": "Number Bumper",
-  "description": "🔢 Number Bumper is a fun math puzzle where you hit the target number by bumping through operation tiles in the right order.",
+  "description": "🔢 Number Bumper is a 2D math puzzle where you hit the target number by going through operation tiles in the right order.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

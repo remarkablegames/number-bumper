@@ -7,7 +7,7 @@
 [![release](https://img.shields.io/github/v/release/remarkablegames/number-bumper)](https://github.com/remarkablegames/number-bumper/releases)
 [![build](https://github.com/remarkablegames/number-bumper/actions/workflows/build.yml/badge.svg)](https://github.com/remarkablegames/number-bumper/actions/workflows/build.yml)
 
-🔢 **Number Bumper** is a fun math puzzle where you hit the target number by bumping through operation tiles in the right order. With quick levels, instant feedback, and growing difficulty, it’s great practice for mental math and number sense.
+🔢 **Number Bumper** is a 2D math puzzle where you hit the target number by going through operation tiles in the right order. With quick levels, instant feedback, and growing difficulty, it’s great practice for mental math and number sense.
 
 Play in the browser:
 
