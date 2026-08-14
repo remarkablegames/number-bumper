@@ -2,8 +2,6 @@ import { GAME } from '../constants'
 import { gridToWorld } from '../helpers'
 import type { LevelData, TileData } from '../types'
 
-const BLANK_TILE_COLOR: [number, number, number] = [0, 0, 0]
-
 export function addTile(
   x: number,
   y: number,
@@ -14,19 +12,20 @@ export function addTile(
   const position = gridToWorld(x, y, level.width, level.height)
 
   const tile = add([
-    rect(GAME.TILE_SIZE, GAME.TILE_SIZE, { radius: GAME.TILE_RADIUS }),
+    rect(GAME.TILE_RENDER_SIZE, GAME.TILE_RENDER_SIZE, {
+      radius: GAME.TILE_RADIUS,
+    }),
     color(
       ...(tileData
         ? GAME.OPERATION_COLORS[tileData.operation]
-        : BLANK_TILE_COLOR),
+        : GAME.BLANK_TILE_COLOR),
     ),
     pos(position),
     anchor('center'),
     area(),
     scale(),
-    opacity(tileData ? 1 : 0),
     {
-      tileData: tileData,
+      tileData,
     },
   ])
 
@@ -71,7 +70,7 @@ export function addTile(
           destroy(label)
         }
         tile.tileData = null
-        tile.opacity = 0
+        tile.color = rgb(...GAME.BLANK_TILE_COLOR)
         tile.scale = vec2(1)
         tile.paused = false
       })

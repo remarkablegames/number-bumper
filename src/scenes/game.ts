@@ -22,29 +22,40 @@ let state: GameState
 function createGameUI(levelData: LevelData) {
   const screenWidth = width()
   const screenHeight = height()
-  const padding = 12
+  const padding = GAME.UI_PADDING
+  const panelWidth = 200
+  const panelHeight = 44
 
-  const targetLabel = add([
-    text('Target: ' + String(levelData.target), { size: 20 }),
-    pos(screenWidth - padding, screenHeight - padding - 60),
-    anchor('botright'),
-    color(WHITE),
+  const targetPanel = add([
+    rect(panelWidth, panelHeight, { radius: 12 }),
+    color(...GAME.OPERATION_COLORS['*']),
+    pos(screenWidth / 2, padding + panelHeight / 2),
+    anchor('center'),
     fixed(),
+  ])
+  const targetLabel = targetPanel.add([
+    text('Target Score: ' + String(levelData.target), {
+      size: 20,
+      align: 'center',
+    }),
+    color(WHITE),
+    pos(),
+    anchor('center'),
   ])
 
   const levelLabel = add([
-    text('Level: ' + String(levelData.level), { size: 20 }),
+    text('Level: ' + String(levelData.level), { size: GAME.UI_TEXT_SIZE }),
     pos(screenWidth - padding, screenHeight - padding - 30),
     anchor('botright'),
-    color(WHITE),
+    color(...GAME.UI_TEXT_COLOR),
     fixed(),
   ])
 
   const movesLabel = add([
-    text('Moves: 0', { size: 20 }),
+    text('Moves: 0', { size: GAME.UI_TEXT_SIZE }),
     pos(screenWidth - padding, screenHeight - padding),
     anchor('botright'),
-    color(WHITE),
+    color(...GAME.UI_TEXT_COLOR),
     fixed(),
   ])
 
@@ -52,7 +63,7 @@ function createGameUI(levelData: LevelData) {
     text('R: Restart', { size: 16 }),
     pos(padding, screenHeight - padding),
     anchor('botleft'),
-    color(200, 200, 200),
+    color(...GAME.UI_HINT_COLOR),
     fixed(),
   ])
 
@@ -94,7 +105,7 @@ function updateCamera() {
 }
 
 function updateUI() {
-  state.targetLabel.text = 'Target: ' + String(state.levelData.target)
+  state.targetLabel.text = 'Target Score: ' + String(state.levelData.target)
   state.levelLabel.text = 'Level: ' + String(state.levelData.level)
   state.movesLabel.text = 'Moves: ' + String(state.moves)
 }
@@ -124,7 +135,7 @@ function handleWin() {
 
   const nextButton = add([
     rect(200, 50, { radius: 8 }),
-    color(59, 130, 246),
+    color(...GAME.NEXT_BUTTON_COLOR),
     pos(width() / 2, height() / 2 + 50),
     anchor('center'),
     area(),
@@ -241,7 +252,7 @@ function handleInput() {
 }
 
 function setupScene(level: number) {
-  setBackground(24, 24, 27)
+  setBackground(...GAME.BACKGROUND_COLOR)
 
   const levelData = generateLevel(level)
   const ui = createGameUI(levelData)

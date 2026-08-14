@@ -11,7 +11,9 @@ export function addPlayer(level: LevelData) {
   )
 
   const player = add([
-    rect(GAME.TILE_SIZE, GAME.TILE_SIZE, { radius: GAME.TILE_RADIUS }),
+    rect(GAME.TILE_RENDER_SIZE, GAME.TILE_RENDER_SIZE, {
+      radius: GAME.TILE_RADIUS,
+    }),
     color(...GAME.PLAYER_COLOR),
     pos(startPosition),
     anchor('center'),
