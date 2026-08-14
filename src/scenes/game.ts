@@ -1,6 +1,6 @@
 import { GAME, SCENE } from '../constants'
-import type { OperationTile, Player } from '../gameobjects'
-import { addBlankTile, addOperationTile, addPlayer } from '../gameobjects'
+import type { Player, Tile } from '../gameobjects'
+import { addPlayer, addTile } from '../gameobjects'
 import { applyOperation, generateLevel } from '../helpers/level'
 import type { LevelData } from '../types'
 
@@ -10,7 +10,7 @@ interface GameState {
   level: number
   levelData: LevelData
   player: Player
-  tiles: Map<string, OperationTile>
+  tiles: Map<string, Tile>
   moves: number
   isComplete: boolean
   targetLabel: GameUI['targetLabel']
@@ -185,21 +185,20 @@ function tryMoveTo(gridX: number, gridY: number) {
   if (dx + dy !== 1) return
 
   const tileKey = String(gridX) + ',' + String(gridY)
-  const operationTile = state.tiles.get(tileKey)
+  const tile = state.tiles.get(tileKey)
+  if (!tile) return
 
   state.player.goToTile(gridX, gridY, () => {
     state.moves += 1
 
-    if (operationTile) {
-      const tile = operationTile.tile
+    if (tile.tileData) {
       const newValue = applyOperation(
         state.player.value,
-        tile.operation,
-        tile.value,
+        tile.tileData.operation,
+        tile.tileData.value,
       )
       state.player.setValue(newValue)
-      operationTile.consume()
-      state.tiles.delete(tileKey)
+      tile.consume()
 
       if (state.player.value === state.levelData.target) {
         handleWin()
@@ -248,28 +247,31 @@ function setupScene(level: number) {
   const levelData = generateLevel(level)
   const ui = createGameUI(levelData)
 
-  const tiles = new Map<string, OperationTile>()
+  const tiles = new Map<string, Tile>()
 
-  const tilePositions = new Set(
-    levelData.tiles.map((tile) => String(tile.x) + ',' + String(tile.y)),
+  const tileDataMap = new Map(
+    levelData.tiles.map((tile) => [
+      String(tile.x) + ',' + String(tile.y),
+      tile,
+    ]),
   )
 
   for (let y = 0; y < levelData.height; y++) {
     for (let x = 0; x < levelData.width; x++) {
-      if (tilePositions.has(String(x) + ',' + String(y))) continue
       const gridX = x
       const gridY = y
-      addBlankTile(x, y, levelData, () => {
-        tryMoveTo(gridX, gridY)
-      })
+      const tileData = tileDataMap.get(String(gridX) + ',' + String(gridY))
+      const tile = addTile(
+        gridX,
+        gridY,
+        levelData,
+        () => {
+          tryMoveTo(gridX, gridY)
+        },
+        tileData ?? null,
+      )
+      tiles.set(String(gridX) + ',' + String(gridY), tile)
     }
-  }
-
-  for (const tile of levelData.tiles) {
-    const operationTile = addOperationTile(tile, levelData, () => {
-      tryMoveTo(tile.x, tile.y)
-    })
-    tiles.set(String(tile.x) + ',' + String(tile.y), operationTile)
   }
 
   const player = addPlayer(levelData)
