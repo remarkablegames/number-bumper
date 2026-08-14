@@ -4,14 +4,14 @@
 
 # Kaplay Template
 
-[![release](https://img.shields.io/github/v/release/remarkablegames/kaplay-template)](https://github.com/remarkablegames/kaplay-template/releases)
-[![build](https://github.com/remarkablegames/kaplay-template/actions/workflows/build.yml/badge.svg)](https://github.com/remarkablegames/kaplay-template/actions/workflows/build.yml)
+[![release](https://img.shields.io/github/v/release/remarkablegames/number-bumper)](https://github.com/remarkablegames/number-bumper/releases)
+[![build](https://github.com/remarkablegames/number-bumper/actions/workflows/build.yml/badge.svg)](https://github.com/remarkablegames/number-bumper/actions/workflows/build.yml)
 
-<kbd>kaplay-template</kbd> is a template for making [KAPLAY](https://kaplayjs.com/) games.
+<kbd>number-bumper</kbd> is a template for making [KAPLAY](https://kaplayjs.com/) games.
 
 Play in the browser:
 
-- [remarkablegames](https://remarkablegames.org/kaplay-template/)
+- [remarkablegames](https://remarkablegames.org/number-bumper/)
 
 ## Prerequisites
 
@@ -26,8 +26,8 @@ brew install nvm
 Clone the repository:
 
 ```sh
-git clone https://github.com/remarkablegames/kaplay-template.git
-cd kaplay-template
+git clone https://github.com/remarkablegames/number-bumper.git
+cd number-bumper
 ```
 
 Install the dependencies:
@@ -39,7 +39,7 @@ npm install
 Rename the project:
 
 ```sh
-git grep -l kaplay-template | xargs sed -i '' -e 's/kaplay-template/my-game/g'
+git grep -l number-bumper | xargs sed -i '' -e 's/number-bumper/my-game/g'
 ```
 
 ```sh
