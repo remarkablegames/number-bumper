@@ -1,20 +1,84 @@
-import { SPRITE, TAG } from '../constants'
-import { addCursorKeys } from '../events'
+import { GAME } from '../constants'
+import type { LevelData, TileData } from '../types'
+import { gridToWorld } from '../utils'
 
-export function addPlayer(x = center().x, y = center().y) {
+export function addPlayer(level: LevelData) {
+  const startPosition = gridToWorld(
+    level.startX,
+    level.startY,
+    level.width,
+    level.height,
+  )
+
   const player = add([
-    sprite(SPRITE.BEAN.id),
-    pos(x, y),
-    rotate(),
+    rect(GAME.TILE_SIZE, GAME.TILE_SIZE, { radius: GAME.TILE_RADIUS }),
+    color(...GAME.PLAYER_COLOR),
+    pos(startPosition),
     anchor('center'),
-    TAG.PLAYER,
+    {
+      gridX: level.startX,
+      gridY: level.startY,
+      isMoving: false,
+      value: level.startValue,
+    },
   ])
 
-  addCursorKeys(player)
+  const valueText = player.add([
+    text(String(level.startValue), { size: GAME.TEXT_SIZE, align: 'center' }),
+    color(GAME.TEXT_COLOR),
+    pos(),
+    anchor('center'),
+    scale(),
+  ])
+
+  function popValueText() {
+    valueText.scale = vec2(GAME.POP_SCALE, GAME.POP_SCALE)
+    tween(
+      GAME.POP_SCALE,
+      1,
+      GAME.POP_DURATION,
+      (value) => {
+        valueText.scale = vec2(value)
+      },
+      easings.easeOutBack,
+    )
+  }
 
   player.onUpdate(() => {
-    player.angle += 120 * dt()
+    valueText.text = String(player.value)
   })
 
-  return player
+  return Object.assign(player, {
+    setValue: (value: number) => {
+      player.value = value
+      popValueText()
+    },
+    goToTile: (tile: TileData, onArrive: () => void) => {
+      player.isMoving = true
+      player.gridX = tile.x
+      player.gridY = tile.y
+
+      const targetPosition = gridToWorld(
+        tile.x,
+        tile.y,
+        level.width,
+        level.height,
+      )
+
+      tween(
+        player.pos,
+        targetPosition,
+        GAME.MOVE_DURATION,
+        (value) => {
+          player.pos = value
+        },
+        easings.easeOutCubic,
+      ).onEnd(() => {
+        player.isMoving = false
+        onArrive()
+      })
+    },
+  })
 }
+
+export type Player = ReturnType<typeof addPlayer>
