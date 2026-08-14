@@ -1,8 +1,8 @@
 import { GAME, SCENE } from '../constants'
 import type { OperationTile, Player } from '../gameobjects'
-import { addOperationTile, addPlayer } from '../gameobjects'
+import { addBlankTile, addOperationTile, addPlayer } from '../gameobjects'
 import { applyOperation, generateLevel } from '../helpers/level'
-import type { LevelData, TileData } from '../types'
+import type { LevelData } from '../types'
 
 type GameUI = ReturnType<typeof createGameUI>
 
@@ -177,43 +177,36 @@ function handleWin() {
   })
 }
 
-function tryMove(tile: TileData) {
+function tryMoveTo(gridX: number, gridY: number) {
   if (state.player.isMoving || state.isComplete) return
 
-  const dx = Math.abs(tile.x - state.player.gridX)
-  const dy = Math.abs(tile.y - state.player.gridY)
+  const dx = Math.abs(gridX - state.player.gridX)
+  const dy = Math.abs(gridY - state.player.gridY)
   if (dx + dy !== 1) return
 
-  const tileKey = String(tile.x) + ',' + String(tile.y)
+  const tileKey = String(gridX) + ',' + String(gridY)
   const operationTile = state.tiles.get(tileKey)
-  if (!operationTile) return
 
-  state.player.goToTile(tile, () => {
-    const newValue = applyOperation(
-      state.player.value,
-      tile.operation,
-      tile.value,
-    )
-    state.player.setValue(newValue)
+  state.player.goToTile(gridX, gridY, () => {
+    if (operationTile) {
+      const tile = operationTile.tile
+      const newValue = applyOperation(
+        state.player.value,
+        tile.operation,
+        tile.value,
+      )
+      state.player.setValue(newValue)
+      operationTile.consume()
+      state.tiles.delete(tileKey)
+    }
+
     state.moves += 1
     updateUI()
-
-    operationTile.consume()
-    state.tiles.delete(tileKey)
 
     if (state.player.value === state.levelData.target) {
       handleWin()
     }
   })
-}
-
-function tryMoveTo(gridX: number, gridY: number) {
-  const tile = state.levelData.tiles.find(
-    (tile) => tile.x === gridX && tile.y === gridY,
-  )
-  if (tile) {
-    tryMove(tile)
-  }
 }
 
 function restartLevel() {
@@ -256,9 +249,24 @@ function setupScene(level: number) {
 
   const tiles = new Map<string, OperationTile>()
 
+  const tilePositions = new Set(
+    levelData.tiles.map((tile) => String(tile.x) + ',' + String(tile.y)),
+  )
+
+  for (let y = 0; y < levelData.height; y++) {
+    for (let x = 0; x < levelData.width; x++) {
+      if (tilePositions.has(String(x) + ',' + String(y))) continue
+      const gridX = x
+      const gridY = y
+      addBlankTile(x, y, levelData, () => {
+        tryMoveTo(gridX, gridY)
+      })
+    }
+  }
+
   for (const tile of levelData.tiles) {
     const operationTile = addOperationTile(tile, levelData, () => {
-      tryMove(tile)
+      tryMoveTo(tile.x, tile.y)
     })
     tiles.set(String(tile.x) + ',' + String(tile.y), operationTile)
   }

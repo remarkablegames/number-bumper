@@ -1,5 +1,5 @@
 import { GAME } from '../constants'
-import type { LevelData, TileData } from '../types'
+import type { LevelData } from '../types'
 import { gridToWorld } from '../utils'
 
 export function addPlayer(level: LevelData) {
@@ -53,14 +53,14 @@ export function addPlayer(level: LevelData) {
       player.value = value
       popValueText()
     },
-    goToTile: (tile: TileData, onArrive: () => void) => {
+    goToTile: (gridX: number, gridY: number, onArrive: () => void) => {
       player.isMoving = true
-      player.gridX = tile.x
-      player.gridY = tile.y
+      player.gridX = gridX
+      player.gridY = gridY
 
       const targetPosition = gridToWorld(
-        tile.x,
-        tile.y,
+        gridX,
+        gridY,
         level.width,
         level.height,
       )
