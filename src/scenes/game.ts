@@ -1,5 +1,5 @@
 import { AUDIO, GAME, SCENE } from '../constants'
-import { addPlayer, addTile } from '../gameobjects'
+import { addButton, addPlayer, addTile } from '../gameobjects'
 import {
   applyOperation,
   generateLevel,
@@ -222,21 +222,23 @@ function handleWin() {
   ])
   equationPanel.add(equationLabel)
 
-  const nextButton = add([
-    rect(200, 50, { radius: 8 }),
-    color(...GAME.NEXT_BUTTON_COLOR),
-    pos(width() / 2, height() / 2 + 100),
-    anchor('center'),
-    area(),
-    fixed(),
-  ])
-
-  const nextLabel = nextButton.add([
-    text('Next Level', { size: 24, align: 'center' }),
-    color(WHITE),
-    pos(),
-    anchor('center'),
-  ])
+  const nextButton = addButton(
+    'Next Level',
+    {
+      pos: vec2(width() / 2, height() / 2 + 100),
+      textSize: 24,
+      padding: 32,
+      radius: 8,
+    },
+    () => {
+      destroy(overlay)
+      destroy(title)
+      destroy(movesText)
+      destroy(equationPanel)
+      destroy(nextButton)
+      go(SCENE.GAME, { level: state.level + 1 })
+    },
+  )
 
   for (let index = 0; index < 30; index++) {
     const confetti = add([
@@ -266,26 +268,6 @@ function handleWin() {
       }
     })
   }
-
-  nextButton.onHover(() => {
-    setCursor('pointer')
-    playSound(AUDIO.SOUND_KEYS.hoverButton)
-  })
-
-  nextButton.onHoverEnd(() => {
-    setCursor('default')
-  })
-
-  nextButton.onClick(() => {
-    playSound(AUDIO.SOUND_KEYS.click)
-    destroy(overlay)
-    destroy(title)
-    destroy(movesText)
-    destroy(equationPanel)
-    destroy(nextButton)
-    destroy(nextLabel)
-    go(SCENE.GAME, { level: state.level + 1 })
-  })
 }
 
 function tryMoveTo(gridX: number, gridY: number) {

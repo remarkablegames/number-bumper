@@ -1,5 +1,5 @@
-import { AUDIO, GAME, SCENE } from '../constants'
-import { playSound } from '../helpers'
+import { GAME, SCENE } from '../constants'
+import { addButton } from '../gameobjects'
 
 scene(SCENE.TITLE, () => {
   setBackground(...GAME.BACKGROUND_COLOR)
@@ -26,40 +26,16 @@ scene(SCENE.TITLE, () => {
     fixed(),
   ])
 
-  const startLabel = make([
-    text('Play', { size: 26, align: 'center' }),
-    color(WHITE),
-    pos(),
-    anchor('center'),
-  ])
-
-  const buttonPadding = 48
-  const startButton = add([
-    rect(startLabel.width + buttonPadding * 2, startLabel.height + 24, {
-      radius: 12,
-    }),
-    color(...GAME.NEXT_BUTTON_COLOR),
-    pos(screenWidth / 2, screenHeight / 2 + 60),
-    anchor('center'),
-    area(),
-    fixed(),
-  ])
-
-  startButton.add(startLabel)
-
-  startButton.onHover(() => {
-    setCursor('pointer')
-    playSound(AUDIO.SOUND_KEYS.hoverButton)
-  })
-
-  startButton.onHoverEnd(() => {
-    setCursor('default')
-  })
-
-  startButton.onClick(() => {
-    playSound(AUDIO.SOUND_KEYS.click)
-    go(SCENE.GAME)
-  })
+  addButton(
+    'Play',
+    {
+      pos: vec2(screenWidth / 2, screenHeight / 2 + 60),
+      textSize: 26,
+    },
+    () => {
+      go(SCENE.GAME)
+    },
+  )
 
   onKeyPress(() => {
     go(SCENE.GAME)
