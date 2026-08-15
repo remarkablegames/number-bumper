@@ -352,16 +352,35 @@ function createMuteIcon() {
     pos(padding),
     anchor('topleft'),
     area(),
+    scale(),
     fixed(),
   ])
 
   icon.onHover(() => {
     setCursor('pointer')
     playSound(AUDIO.SOUND_KEYS.hoverButton)
+    tween(
+      icon.scale,
+      vec2(GAME.HOVER_SCALE),
+      GAME.HOVER_DURATION,
+      (value) => {
+        icon.scale = value
+      },
+      easings.easeOutQuad,
+    )
   })
 
   icon.onHoverEnd(() => {
     setCursor('default')
+    tween(
+      icon.scale,
+      vec2(1),
+      GAME.HOVER_DURATION,
+      (value) => {
+        icon.scale = value
+      },
+      easings.easeOutQuad,
+    )
   })
 
   icon.onClick(() => {

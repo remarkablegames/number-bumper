@@ -35,6 +35,7 @@ export function addButton(
     pos(position),
     anchor(buttonAnchor),
     area(),
+    scale(),
     fixed(),
   ])
 
@@ -43,10 +44,28 @@ export function addButton(
   button.onHover(() => {
     setCursor('pointer')
     playSound(AUDIO.SOUND_KEYS.hoverButton)
+    tween(
+      button.scale,
+      vec2(GAME.HOVER_SCALE),
+      GAME.HOVER_DURATION,
+      (value) => {
+        button.scale = value
+      },
+      easings.easeOutQuad,
+    )
   })
 
   button.onHoverEnd(() => {
     setCursor('default')
+    tween(
+      button.scale,
+      vec2(1),
+      GAME.HOVER_DURATION,
+      (value) => {
+        button.scale = value
+      },
+      easings.easeOutQuad,
+    )
   })
 
   button.onClick(() => {
