@@ -7,6 +7,7 @@ export function addTile(
   y: number,
   level: LevelData,
   onClick: () => void,
+  canClick: () => boolean,
   tileData: TileData | null = null,
 ) {
   const position = gridToWorld(x, y, level.width, level.height)
@@ -53,42 +54,40 @@ export function addTile(
   })
 
   tile.onHover(() => {
+    if (!canClick()) return
     setCursor('pointer')
-    if (tileData && !tile.paused) {
+    if (tileData) {
       playSound(AUDIO.SOUND_KEYS.hoverTile)
     }
-    if (!tile.paused) {
-      tween(
-        tile.scale,
-        vec2(GAME.HOVER_SCALE),
-        GAME.HOVER_DURATION,
-        (value) => {
-          tile.scale = value
-          if (label) {
-            label.scale = value
-          }
-        },
-        easings.easeOutQuad,
-      )
-    }
+    tween(
+      tile.scale,
+      vec2(GAME.HOVER_SCALE),
+      GAME.HOVER_DURATION,
+      (value) => {
+        tile.scale = value
+        if (label) {
+          label.scale = value
+        }
+      },
+      easings.easeOutQuad,
+    )
   })
 
   tile.onHoverEnd(() => {
+    if (!canClick()) return
     setCursor('default')
-    if (!tile.paused) {
-      tween(
-        tile.scale,
-        vec2(1),
-        GAME.HOVER_DURATION,
-        (value) => {
-          tile.scale = value
-          if (label) {
-            label.scale = value
-          }
-        },
-        easings.easeOutQuad,
-      )
-    }
+    tween(
+      tile.scale,
+      vec2(1),
+      GAME.HOVER_DURATION,
+      (value) => {
+        tile.scale = value
+        if (label) {
+          label.scale = value
+        }
+      },
+      easings.easeOutQuad,
+    )
   })
 
   return Object.assign(tile, {

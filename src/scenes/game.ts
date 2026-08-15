@@ -422,6 +422,12 @@ function setupScene(level: number) {
         () => {
           tryMoveTo(gridX, gridY)
         },
+        () => {
+          if (state.player.isMoving || state.isComplete) return false
+          const dx = Math.abs(gridX - state.player.gridX)
+          const dy = Math.abs(gridY - state.player.gridY)
+          return dx + dy === 1
+        },
         tileData ?? null,
       )
       tiles.set(String(gridX) + ',' + String(gridY), tile)
