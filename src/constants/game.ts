@@ -16,6 +16,7 @@ export const MAX_START_VALUE = 3
 export const MIN_TILE_VALUE = 1
 export const MAX_TILE_VALUE = 5
 export const MAX_TILE_VALUE_BONUS = 5
+export const MAX_MULTIPLY_DIVIDE_TILES = 2
 
 export const MAX_VALUE = 1000
 

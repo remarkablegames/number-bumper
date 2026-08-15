@@ -135,13 +135,19 @@ function generatePathOperations(
   let current = startValue
   const tiles: TileData[] = []
   const requiredIndex = required === undefined ? -1 : randi(0, path.length - 2)
+  let mulDivCount = 0
+
+  const safeOperations = operations.filter((op) => op === '+' || op === '-')
 
   for (let index = 1; index < path.length; index++) {
     const point = path[index]
+    const canMulDiv = mulDivCount < GAME.MAX_MULTIPLY_DIVIDE_TILES
+    const availableOps = canMulDiv ? operations : safeOperations
     const operation =
       index - 1 === requiredIndex
-        ? chooseOperation(current, operations, level, required)
-        : chooseOperation(current, operations, level)
+        ? chooseOperation(current, availableOps, level, required)
+        : chooseOperation(current, availableOps, level)
+    if (operation === '*' || operation === '/') mulDivCount++
     let value = randomTileValue(level)
     value = clampValueForOperation(current, operation, value)
     current = applyOperation(current, operation, value)
@@ -207,11 +213,22 @@ function fillRemainingTiles(
       )
     : 0
 
+  const pathMulDiv = pathTiles.filter(
+    (tile) => tile.operation === '*' || tile.operation === '/',
+  ).length
+  let mulDivCount = pathMulDiv
+  const safeOperations = operations.filter((op) => op === '+' || op === '-')
+
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       if (occupied.has(String(x) + ',' + String(y))) continue
       if (Math.random() < emptyChance) continue
-      const tile = generateRandomTile(operations, level)
+      const availableOps =
+        mulDivCount < GAME.MAX_MULTIPLY_DIVIDE_TILES
+          ? operations
+          : safeOperations
+      const tile = generateRandomTile(availableOps, level)
+      if (tile.operation === '*' || tile.operation === '/') mulDivCount++
       tile.x = x
       tile.y = y
       tiles.push(tile)
