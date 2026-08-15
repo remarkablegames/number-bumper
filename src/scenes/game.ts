@@ -77,7 +77,7 @@ function createGameUI(levelData: LevelData) {
   ])
 
   add([
-    text('R: Restart', { size: 16 }),
+    text('R: Restart', { size: GAME.UI_TEXT_SIZE }),
     pos(padding, screenHeight - padding),
     anchor('botleft'),
     color(...GAME.UI_HINT_COLOR),
