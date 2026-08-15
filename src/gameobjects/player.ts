@@ -17,7 +17,7 @@ export function addPlayer(level: LevelData) {
     color(...GAME.PLAYER_COLOR),
     pos(startPosition),
     anchor('center'),
-    scale(),
+    outline(4, WHITE),
     {
       gridX: level.startX,
       gridY: level.startY,
@@ -49,9 +49,6 @@ export function addPlayer(level: LevelData) {
 
   player.onUpdate(() => {
     valueText.text = String(player.value)
-
-    const pulse = 1 + Math.sin(time() * 4) * 0.04
-    player.scale = vec2(pulse)
   })
 
   return Object.assign(player, {
