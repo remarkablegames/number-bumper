@@ -22,6 +22,11 @@ Play in the browser:
 - **Controls** — click/press adjacent tiles or use WASD/arrow keys to move
 - **Restart** — press `R` to restart the current level
 
+## Credits
+
+- [FREE Background Music for Visual Novels vol.1](https://d-wheat-music.itch.io/free-background-music-for-dating-sim-vol1) by [D-wheat music](https://d-wheat-music.itch.io/)
+- [Universal UI/Menu Soundpack](https://cyrex-studios.itch.io/universal-ui-soundpack) by [Nathan Gibson](https://nathangibson.myportfolio.com)
+
 ## Prerequisites
 
 [nvm](https://github.com/nvm-sh/nvm#installing-and-updating):
