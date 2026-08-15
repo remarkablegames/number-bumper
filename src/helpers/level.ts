@@ -15,7 +15,7 @@ export function applyOperation(
     case '+':
       return current + value
     case '-':
-      return Math.max(0, current - value)
+      return current - value
     case '*':
       return current * value
     case '/':
