@@ -123,7 +123,7 @@ function buildEquation(): string {
   const startValue = state.levelData.startValue
   const steps = state.operationHistory
 
-  if (steps.length === 0) {
+  if (!steps.length) {
     return String(startValue)
   }
 

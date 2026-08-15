@@ -59,7 +59,7 @@ function generatePath(
     const neighbors = getNeighbors(current, width, height).filter(
       (neighbor) => !visited.has(String(neighbor.x) + ',' + String(neighbor.y)),
     )
-    if (neighbors.length === 0) break
+    if (!neighbors.length) break
     current = choose(neighbors)
     path.push(current)
     visited.add(String(current.x) + ',' + String(current.y))
@@ -101,7 +101,7 @@ function chooseOperation(
   const valid = operations.filter((operation) =>
     isValidOperation(current, operation, randomTileValue()),
   )
-  if (valid.length === 0) return operations[0]
+  if (!valid.length) return operations[0]
   return choose(valid)
 }
 
@@ -248,7 +248,7 @@ export function generateLevel(level: number): LevelData {
       required,
     )
 
-    if (pathTiles.length === 0) continue
+    if (!pathTiles.length) continue
 
     const target = applyOperationValue(
       startValue,
