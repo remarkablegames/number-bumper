@@ -85,21 +85,23 @@ function isValidOperation(
   }
 }
 
-function randomTileValue(): number {
-  return randi(GAME.MIN_TILE_VALUE, GAME.MAX_TILE_VALUE)
+function randomTileValue(level: number): number {
+  const max = GAME.MAX_TILE_VALUE + Math.min(level, GAME.MAX_TILE_VALUE_BONUS)
+  return randi(GAME.MIN_TILE_VALUE, max)
 }
 
 function chooseOperation(
   current: number,
   operations: readonly Operation[],
+  level: number,
   required?: Operation,
 ): Operation {
-  if (required && isValidOperation(current, required, randomTileValue())) {
+  if (required && isValidOperation(current, required, randomTileValue(level))) {
     return required
   }
 
   const valid = operations.filter((operation) =>
-    isValidOperation(current, operation, randomTileValue()),
+    isValidOperation(current, operation, randomTileValue(level)),
   )
   if (!valid.length) return operations[0]
   return choose(valid)
@@ -127,6 +129,7 @@ function generatePathOperations(
   startValue: number,
   path: Point[],
   operations: readonly Operation[],
+  level: number,
   required?: Operation,
 ): TileData[] {
   let current = startValue
@@ -137,9 +140,9 @@ function generatePathOperations(
     const point = path[index]
     const operation =
       index - 1 === requiredIndex
-        ? chooseOperation(current, operations, required)
-        : chooseOperation(current, operations)
-    let value = randomTileValue()
+        ? chooseOperation(current, operations, level, required)
+        : chooseOperation(current, operations, level)
+    let value = randomTileValue(level)
     value = clampValueForOperation(current, operation, value)
     current = applyOperation(current, operation, value)
     tiles.push({ x: point.x, y: point.y, operation, value })
@@ -161,9 +164,12 @@ function getRequiredOperation(level: number): Operation | undefined {
   }
 }
 
-function generateRandomTile(operations: readonly Operation[]): TileData {
+function generateRandomTile(
+  operations: readonly Operation[],
+  level: number,
+): TileData {
   const operation = choose([...operations])
-  let value = randomTileValue()
+  let value = randomTileValue(level)
   if (operation === '/') {
     value = Math.max(2, value)
   }
@@ -205,7 +211,7 @@ function fillRemainingTiles(
     for (let x = 0; x < width; x++) {
       if (occupied.has(String(x) + ',' + String(y))) continue
       if (Math.random() < emptyChance) continue
-      const tile = generateRandomTile(operations)
+      const tile = generateRandomTile(operations, level)
       tile.x = x
       tile.y = y
       tiles.push(tile)
@@ -245,10 +251,11 @@ export function generateLevel(level: number): LevelData {
       startValue,
       path,
       operations,
+      level,
       required,
     )
 
-    if (!pathTiles.length) continue
+    if (pathTiles.length < Math.min(pathLength, level)) continue
 
     const target = applyOperationValue(
       startValue,
@@ -259,6 +266,7 @@ export function generateLevel(level: number): LevelData {
     )
 
     if (target < 1) continue
+    if (target < level) continue
 
     const allTiles = fillRemainingTiles(
       width,
