@@ -56,7 +56,9 @@ export const UI_TEXT_COLOR: [number, number, number] = [60, 60, 70]
 export const UI_HINT_COLOR: [number, number, number] = [100, 100, 110]
 
 export const NEXT_BUTTON_COLOR: [number, number, number] = [59, 130, 246]
-export const EQUATION_TEXT_COLOR: [number, number, number] = [200, 210, 225]
+export const WIN_SECONDARY_TEXT_COLOR: [number, number, number] = [
+  200, 210, 225,
+]
 
 export const LEVEL_CONFIGS = [
   { level: 1, width: 3, height: 3, operations: ['+'] as const },

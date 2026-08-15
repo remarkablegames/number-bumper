@@ -149,7 +149,7 @@ function handleWin() {
   ])
 
   const title = add([
-    text('Level Complete!', {
+    text('Level Complete ✅', {
       size: 40,
       align: 'center',
     }),
@@ -166,7 +166,7 @@ function handleWin() {
     }),
     pos(width() / 2, height() / 2 - 30),
     anchor('center'),
-    color(WHITE),
+    color(...GAME.WIN_SECONDARY_TEXT_COLOR),
     fixed(),
   ])
 
@@ -175,7 +175,7 @@ function handleWin() {
       size: 22,
       align: 'center',
     }),
-    color(...GAME.EQUATION_TEXT_COLOR),
+    color(...GAME.WIN_SECONDARY_TEXT_COLOR),
     pos(),
     anchor('center'),
   ])
