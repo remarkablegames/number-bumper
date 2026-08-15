@@ -18,10 +18,12 @@ export function addPlayer(level: LevelData) {
     pos(startPosition),
     anchor('center'),
     outline(4, WHITE),
+    scale(),
     {
       gridX: level.startX,
       gridY: level.startY,
       isMoving: false,
+      hasMoved: false,
       value: level.startValue,
     },
   ])
@@ -49,6 +51,11 @@ export function addPlayer(level: LevelData) {
 
   player.onUpdate(() => {
     valueText.text = String(player.value)
+
+    if (!player.hasMoved) {
+      const pulse = 1 + Math.sin(time() * 4) * 0.04
+      player.scale = vec2(pulse)
+    }
   })
 
   return Object.assign(player, {
@@ -57,6 +64,11 @@ export function addPlayer(level: LevelData) {
       popValueText()
     },
     goToTile: (gridX: number, gridY: number, onArrive: () => void) => {
+      if (!player.hasMoved) {
+        player.hasMoved = true
+        player.scale = vec2(1)
+      }
+
       player.isMoving = true
       player.gridX = gridX
       player.gridY = gridY
