@@ -166,6 +166,10 @@ function handleWin() {
   state.isComplete = true
   playSound(AUDIO.SOUND_KEYS.win)
 
+  for (const tile of state.tiles.values()) {
+    tile.paused = true
+  }
+
   const overlay = add([
     rect(width(), height()),
     color(BLACK),
