@@ -18,6 +18,9 @@ export const MAX_TILE_VALUE = 5
 
 export const MAX_VALUE = 1000
 
+export const EMPTY_TILE_LEVEL = 4
+export const EMPTY_TILE_CHANCE = 0.2
+
 export const MOVE_DURATION = 0.15
 export const POP_DURATION = 0.2
 export const POP_SCALE = 1.4

@@ -182,6 +182,7 @@ function fillRemainingTiles(
   startY: number,
   pathTiles: TileData[],
   operations: Operation[],
+  level: number,
 ): TileData[] {
   const tiles = [...pathTiles]
   const occupied = new Set(
@@ -191,9 +192,12 @@ function fillRemainingTiles(
   // Reserve the player's starting cell.
   occupied.add(String(startX) + ',' + String(startY))
 
+  const allowEmpty = level >= GAME.EMPTY_TILE_LEVEL
+
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       if (occupied.has(String(x) + ',' + String(y))) continue
+      if (allowEmpty && Math.random() < GAME.EMPTY_TILE_CHANCE) continue
       const tile = generateRandomTile(operations)
       tile.x = x
       tile.y = y
@@ -256,6 +260,7 @@ export function generateLevel(level: number): LevelData {
       startY,
       pathTiles,
       operations,
+      level,
     )
     return {
       level,
@@ -292,6 +297,7 @@ export function generateLevel(level: number): LevelData {
         },
       ],
       ['+'],
+      level,
     ),
   }
 }
