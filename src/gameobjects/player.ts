@@ -19,6 +19,7 @@ export function addPlayer(level: LevelData) {
     anchor('center'),
     outline(4, WHITE),
     scale(),
+    area(),
     {
       gridX: level.startX,
       gridY: level.startY,
@@ -55,6 +56,13 @@ export function addPlayer(level: LevelData) {
     if (!player.hasMoved) {
       const pulse = 1 + Math.sin(time() * 4) * 0.04
       player.scale = vec2(pulse)
+    }
+  })
+
+  player.onClick(() => {
+    if (!player.hasMoved) {
+      player.hasMoved = true
+      player.scale = vec2(1)
     }
   })
 
