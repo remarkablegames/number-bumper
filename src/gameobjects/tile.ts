@@ -1,5 +1,5 @@
-import { GAME } from '../constants'
-import { gridToWorld } from '../helpers'
+import { AUDIO, GAME } from '../constants'
+import { gridToWorld, playSound } from '../helpers'
 import type { LevelData, TileData } from '../types'
 
 export function addTile(
@@ -51,6 +51,14 @@ export function addTile(
       onClick()
     }
   })
+
+  if (tileData) {
+    tile.onHover(() => {
+      if (!tile.paused) {
+        playSound(AUDIO.SOUND_KEYS.hoverTile)
+      }
+    })
+  }
 
   return Object.assign(tile, {
     consume: () => {

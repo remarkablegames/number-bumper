@@ -1,6 +1,16 @@
-import { GAME, SCENE } from '../constants'
+import { AUDIO, GAME, SCENE } from '../constants'
 import { addPlayer, addTile } from '../gameobjects'
-import { applyOperation, generateLevel, getLevelConfig } from '../helpers'
+import {
+  applyOperation,
+  generateLevel,
+  getLevelConfig,
+  isMuted,
+  playMusic,
+  playOperationSound,
+  playSound,
+  setMuteIconUpdater,
+  toggleMute,
+} from '../helpers'
 import type { LevelData, Operation, Player, Tile } from '../types'
 
 type GameUI = ReturnType<typeof createGameUI>
@@ -84,6 +94,14 @@ function createGameUI(levelData: LevelData) {
     fixed(),
   ])
 
+  add([
+    text('M: Mute', { size: GAME.UI_TEXT_SIZE }),
+    pos(padding, screenHeight - padding - 30),
+    anchor('botleft'),
+    color(...GAME.UI_HINT_COLOR),
+    fixed(),
+  ])
+
   return { targetLabel, levelLabel, movesLabel }
 }
 
@@ -146,6 +164,7 @@ function buildEquation(): string {
 
 function handleWin() {
   state.isComplete = true
+  playSound(AUDIO.SOUND_KEYS.win)
 
   const overlay = add([
     rect(width(), height()),
@@ -244,7 +263,12 @@ function handleWin() {
     })
   }
 
+  nextButton.onHover(() => {
+    playSound(AUDIO.SOUND_KEYS.hoverButton)
+  })
+
   nextButton.onClick(() => {
+    playSound(AUDIO.SOUND_KEYS.click)
     destroy(overlay)
     destroy(title)
     destroy(movesText)
@@ -266,6 +290,8 @@ function tryMoveTo(gridX: number, gridY: number) {
   const tile = state.tiles.get(tileKey)
   if (!tile) return
 
+  playSound(AUDIO.SOUND_KEYS.move)
+
   state.player.goToTile(gridX, gridY, () => {
     state.moves += 1
 
@@ -282,6 +308,7 @@ function tryMoveTo(gridX: number, gridY: number) {
       })
       state.player.setValue(newValue)
       tile.consume()
+      playOperationSound(tile.tileData.operation)
 
       if (state.player.value === state.levelData.target) {
         handleWin()
@@ -320,12 +347,41 @@ function handleInput() {
       case 'r':
         restartLevel()
         break
+      case 'm':
+        toggleMute()
+        break
     }
+  })
+}
+
+function createMuteIcon() {
+  const padding = GAME.UI_PADDING
+  const icon = add([
+    text(isMuted() ? '🔇' : '🔊', { size: 36 }),
+    pos(padding),
+    anchor('topleft'),
+    area(),
+    fixed(),
+  ])
+
+  icon.onHover(() => {
+    playSound(AUDIO.SOUND_KEYS.hoverButton)
+  })
+
+  icon.onClick(() => {
+    playSound(AUDIO.SOUND_KEYS.click)
+    toggleMute()
+  })
+
+  setMuteIconUpdater((muted) => {
+    icon.text = muted ? '🔇' : '🔊'
   })
 }
 
 function setupScene(level: number) {
   setBackground(...GAME.BACKGROUND_COLOR)
+  playMusic()
+  createMuteIcon()
 
   const levelData = generateLevel(level)
   const ui = createGameUI(levelData)
