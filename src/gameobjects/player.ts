@@ -52,6 +52,8 @@ export function addPlayer(level: LevelData) {
 
   player.onUpdate(() => {
     valueText.text = String(player.value)
+    valueText.textSize =
+      player.value >= 100 ? GAME.TEXT_SIZE_SMALL : GAME.TEXT_SIZE
 
     if (!player.hasMoved) {
       const pulse = 1 + Math.sin(time() * 4) * 0.04

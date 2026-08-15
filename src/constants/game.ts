@@ -15,7 +15,7 @@ export const MAX_START_VALUE = 3
 
 export const MIN_TILE_VALUE = 1
 export const MAX_TILE_VALUE = 5
-export const MAX_TILE_VALUE_BONUS = 10
+export const MAX_TILE_VALUE_BONUS = 5
 
 export const MAX_VALUE = 1000
 
@@ -28,6 +28,7 @@ export const POP_DURATION = 0.2
 export const POP_SCALE = 1.4
 
 export const TEXT_SIZE = 24
+export const TEXT_SIZE_SMALL = 18
 export const TEXT_COLOR = WHITE
 
 export const BACKGROUND_COLOR: [number, number, number] = [225, 235, 250]

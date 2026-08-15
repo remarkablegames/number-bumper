@@ -33,9 +33,12 @@ export function addTile(
     ? GAME.OPERATION_SYMBOLS[tileData.operation] + String(tileData.value)
     : ''
 
+  const labelSize =
+    tileData && tileData.value >= 100 ? GAME.TEXT_SIZE_SMALL : GAME.TEXT_SIZE
+
   const label = tileData
     ? tile.add([
-        text(labelText, { size: GAME.TEXT_SIZE, align: 'center' }),
+        text(labelText, { size: labelSize, align: 'center' }),
         color(GAME.TEXT_COLOR),
         pos(),
         anchor('center'),
