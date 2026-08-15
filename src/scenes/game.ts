@@ -1,9 +1,15 @@
 import { GAME, SCENE } from '../constants'
 import { addPlayer, addTile } from '../gameobjects'
 import { applyOperation, generateLevel } from '../helpers'
-import type { LevelData, Player, Tile } from '../types'
+import type { LevelData, Operation, Player, Tile } from '../types'
 
 type GameUI = ReturnType<typeof createGameUI>
+
+interface OperationStep {
+  operation: Operation
+  value: number
+  result: number
+}
 
 interface GameState {
   level: number
@@ -12,6 +18,7 @@ interface GameState {
   tiles: Map<string, Tile>
   moves: number
   isComplete: boolean
+  operationHistory: OperationStep[]
   targetLabel: GameUI['targetLabel']
   levelLabel: GameUI['levelLabel']
   movesLabel: GameUI['movesLabel']
@@ -112,6 +119,23 @@ function updateUI() {
   state.movesLabel.text = 'Moves: ' + String(state.moves)
 }
 
+function buildEquation(): string {
+  const startValue = state.levelData.startValue
+  const steps = state.operationHistory
+
+  if (steps.length === 0) {
+    return String(startValue)
+  }
+
+  let equation = String(startValue)
+  for (const step of steps) {
+    equation +=
+      ' ' + GAME.OPERATION_SYMBOLS[step.operation] + ' ' + String(step.value)
+  }
+  equation += ' = ' + String(steps[steps.length - 1].result)
+  return equation
+}
+
 function handleWin() {
   state.isComplete = true
 
@@ -129,16 +153,37 @@ function handleWin() {
       size: 36,
       align: 'center',
     }),
-    pos(width() / 2, height() / 2 - 40),
+    pos(width() / 2, height() / 2 - 60),
     anchor('center'),
     color(WHITE),
     fixed(),
   ])
 
+  const equationLabel = make([
+    text(buildEquation(), {
+      size: 22,
+      align: 'center',
+    }),
+    color(...GAME.EQUATION_TEXT_COLOR),
+    pos(),
+    anchor('center'),
+  ])
+
+  const equationPanelPadding = 20
+  const equationPanel = add([
+    rect(equationLabel.width + equationPanelPadding * 2, 44, { radius: 10 }),
+    color(BLACK),
+    opacity(0.4),
+    pos(width() / 2, height() / 2),
+    anchor('center'),
+    fixed(),
+  ])
+  equationPanel.add(equationLabel)
+
   const nextButton = add([
     rect(200, 50, { radius: 8 }),
     color(...GAME.NEXT_BUTTON_COLOR),
-    pos(width() / 2, height() / 2 + 50),
+    pos(width() / 2, height() / 2 + 70),
     anchor('center'),
     area(),
     fixed(),
@@ -183,6 +228,7 @@ function handleWin() {
   nextButton.onClick(() => {
     destroy(overlay)
     destroy(message)
+    destroy(equationPanel)
     destroy(nextButton)
     destroy(nextLabel)
     go(SCENE.GAME, { level: state.level + 1 })
@@ -209,6 +255,11 @@ function tryMoveTo(gridX: number, gridY: number) {
         tile.tileData.operation,
         tile.tileData.value,
       )
+      state.operationHistory.push({
+        operation: tile.tileData.operation,
+        value: tile.tileData.value,
+        result: newValue,
+      })
       state.player.setValue(newValue)
       tile.consume()
 
@@ -295,6 +346,7 @@ function setupScene(level: number) {
     tiles,
     moves: 0,
     isComplete: false,
+    operationHistory: [],
     ...ui,
   }
 
