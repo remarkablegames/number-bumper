@@ -44,7 +44,7 @@ export const OPERATION_SYMBOLS: Record<Operation, string> = {
   '/': '÷',
 }
 
-export const PLAYER_COLOR: [number, number, number] = [70, 145, 255]
+export const PLAYER_COLOR: [number, number, number] = [80, 80, 80]
 
 export const UI_PADDING = 12
 export const UI_TEXT_SIZE = 20
