@@ -52,13 +52,16 @@ export function addTile(
     }
   })
 
-  if (tileData) {
-    tile.onHover(() => {
-      if (!tile.paused) {
-        playSound(AUDIO.SOUND_KEYS.hoverTile)
-      }
-    })
-  }
+  tile.onHover(() => {
+    setCursor('pointer')
+    if (tileData && !tile.paused) {
+      playSound(AUDIO.SOUND_KEYS.hoverTile)
+    }
+  })
+
+  tile.onHoverEnd(() => {
+    setCursor('default')
+  })
 
   return Object.assign(tile, {
     consume: () => {

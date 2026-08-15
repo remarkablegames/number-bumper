@@ -48,7 +48,12 @@ scene(SCENE.TITLE, () => {
   startButton.add(startLabel)
 
   startButton.onHover(() => {
+    setCursor('pointer')
     playSound(AUDIO.SOUND_KEYS.hoverButton)
+  })
+
+  startButton.onHoverEnd(() => {
+    setCursor('default')
   })
 
   startButton.onClick(() => {

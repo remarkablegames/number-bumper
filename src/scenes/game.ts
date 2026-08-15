@@ -268,7 +268,12 @@ function handleWin() {
   }
 
   nextButton.onHover(() => {
+    setCursor('pointer')
     playSound(AUDIO.SOUND_KEYS.hoverButton)
+  })
+
+  nextButton.onHoverEnd(() => {
+    setCursor('default')
   })
 
   nextButton.onClick(() => {
@@ -369,7 +374,12 @@ function createMuteIcon() {
   ])
 
   icon.onHover(() => {
+    setCursor('pointer')
     playSound(AUDIO.SOUND_KEYS.hoverButton)
+  })
+
+  icon.onHoverEnd(() => {
+    setCursor('default')
   })
 
   icon.onClick(() => {
