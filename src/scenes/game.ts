@@ -148,12 +148,23 @@ function handleWin() {
     fixed(),
   ])
 
-  const message = add([
-    text('Level Complete!\nMoves: ' + String(state.moves), {
-      size: 36,
+  const title = add([
+    text('Level Complete!', {
+      size: 40,
       align: 'center',
     }),
-    pos(width() / 2, height() / 2 - 60),
+    pos(width() / 2, height() / 2 - 80),
+    anchor('center'),
+    color(WHITE),
+    fixed(),
+  ])
+
+  const movesText = add([
+    text('Moves: ' + String(state.moves), {
+      size: 32,
+      align: 'center',
+    }),
+    pos(width() / 2, height() / 2 - 30),
     anchor('center'),
     color(WHITE),
     fixed(),
@@ -174,7 +185,7 @@ function handleWin() {
     rect(equationLabel.width + equationPanelPadding * 2, 44, { radius: 10 }),
     color(BLACK),
     opacity(0.4),
-    pos(width() / 2, height() / 2),
+    pos(width() / 2, height() / 2 + 30),
     anchor('center'),
     fixed(),
   ])
@@ -183,7 +194,7 @@ function handleWin() {
   const nextButton = add([
     rect(200, 50, { radius: 8 }),
     color(...GAME.NEXT_BUTTON_COLOR),
-    pos(width() / 2, height() / 2 + 70),
+    pos(width() / 2, height() / 2 + 100),
     anchor('center'),
     area(),
     fixed(),
@@ -227,7 +238,8 @@ function handleWin() {
 
   nextButton.onClick(() => {
     destroy(overlay)
-    destroy(message)
+    destroy(title)
+    destroy(movesText)
     destroy(equationPanel)
     destroy(nextButton)
     destroy(nextLabel)
