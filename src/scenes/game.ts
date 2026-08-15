@@ -1,6 +1,6 @@
 import { GAME, SCENE } from '../constants'
 import { addPlayer, addTile } from '../gameobjects'
-import { applyOperation, generateLevel } from '../helpers'
+import { applyOperation, generateLevel, getLevelConfig } from '../helpers'
 import type { LevelData, Operation, Player, Tile } from '../types'
 
 type GameUI = ReturnType<typeof createGameUI>
@@ -34,8 +34,8 @@ function createGameUI(levelData: LevelData) {
   const panelPadding = 24
 
   const targetLabel = make([
-    text('Target Score: ' + String(levelData.target), {
-      size: 20,
+    text('Goal: ' + String(levelData.target), {
+      size: 24,
       align: 'center',
     }),
     color(WHITE),
@@ -51,6 +51,14 @@ function createGameUI(levelData: LevelData) {
     fixed(),
   ])
   targetPanel.add(targetLabel)
+
+  add([
+    text(getLevelConfig(levelData.level).hint, { size: 20, align: 'center' }),
+    pos(screenWidth / 2, padding + panelHeight + 12),
+    anchor('top'),
+    color(...GAME.UI_HINT_COLOR),
+    fixed(),
+  ])
 
   const levelLabel = add([
     text('Level: ' + String(levelData.level), { size: GAME.UI_TEXT_SIZE }),
@@ -114,7 +122,7 @@ function updateCamera() {
 }
 
 function updateUI() {
-  state.targetLabel.text = 'Target Score: ' + String(state.levelData.target)
+  state.targetLabel.text = 'Goal: ' + String(state.levelData.target)
   state.levelLabel.text = 'Level: ' + String(state.levelData.level)
   state.movesLabel.text = 'Moves: ' + String(state.moves)
 }

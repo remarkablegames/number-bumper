@@ -23,4 +23,5 @@ export interface LevelConfig {
   width: number
   height: number
   operations: readonly Operation[]
+  hint: string
 }
