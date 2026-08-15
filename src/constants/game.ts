@@ -18,8 +18,9 @@ export const MAX_TILE_VALUE = 5
 
 export const MAX_VALUE = 1000
 
-export const EMPTY_TILE_LEVEL = 4
-export const EMPTY_TILE_CHANCE = 0.2
+export const EMPTY_TILE_LEVEL = 11
+export const EMPTY_TILE_MIN_CHANCE = 0.1
+export const EMPTY_TILE_MAX_CHANCE = 0.3
 
 export const MOVE_DURATION = 0.15
 export const POP_DURATION = 0.2
@@ -57,13 +58,61 @@ export const UI_HINT_COLOR: [number, number, number] = [100, 100, 110]
 export const NEXT_BUTTON_COLOR: [number, number, number] = [59, 130, 246]
 
 export const LEVEL_CONFIGS = [
-  { level: 1, width: 3, height: 3, operations: ['+'] as Operation[] },
-  { level: 2, width: 4, height: 4, operations: ['+', '-'] as Operation[] },
-  { level: 3, width: 5, height: 5, operations: ['+', '-', '*'] as Operation[] },
+  { level: 1, width: 3, height: 3, operations: ['+'] as const },
+  { level: 2, width: 3, height: 3, operations: ['+'] as const },
+  { level: 3, width: 3, height: 3, operations: ['+'] as const },
+  { level: 4, width: 3, height: 3, operations: ['+', '-'] as const },
+  { level: 5, width: 3, height: 3, operations: ['+', '-'] as const },
+  { level: 6, width: 3, height: 3, operations: ['+', '-'] as const },
+  { level: 7, width: 4, height: 4, operations: ['+', '-'] as const },
+  { level: 8, width: 4, height: 4, operations: ['+', '-', '*'] as const },
+  { level: 9, width: 4, height: 4, operations: ['+', '-', '*'] as const },
   {
-    level: 4,
+    level: 10,
+    width: 4,
+    height: 4,
+    operations: ['+', '-', '*'] as const,
+  },
+  {
+    level: 11,
+    width: 5,
+    height: 5,
+    operations: ['+', '-', '*'] as const,
+  },
+  {
+    level: 12,
+    width: 5,
+    height: 5,
+    operations: ['+', '-', '*'] as const,
+  },
+  {
+    level: 13,
+    width: 5,
+    height: 5,
+    operations: ['+', '-', '*'] as const,
+  },
+  {
+    level: 14,
+    width: 5,
+    height: 5,
+    operations: ['+', '-', '*'] as const,
+  },
+  {
+    level: 15,
+    width: 5,
+    height: 5,
+    operations: ['+', '-', '*'] as const,
+  },
+  {
+    level: 16,
+    width: 5,
+    height: 5,
+    operations: ['+', '-', '*', '/'] as const,
+  },
+  {
+    level: 17,
     width: 6,
     height: 6,
-    operations: ['+', '-', '*', '/'] as Operation[],
+    operations: ['+', '-', '*', '/'] as const,
   },
 ]

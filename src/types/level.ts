@@ -22,5 +22,5 @@ export interface LevelConfig {
   level: number
   width: number
   height: number
-  operations: Operation[]
+  operations: readonly Operation[]
 }

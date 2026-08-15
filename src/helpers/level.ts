@@ -91,7 +91,7 @@ function randomTileValue(): number {
 
 function chooseOperation(
   current: number,
-  operations: Operation[],
+  operations: readonly Operation[],
   required?: Operation,
 ): Operation {
   if (required && isValidOperation(current, required, randomTileValue())) {
@@ -126,7 +126,7 @@ function clampValueForOperation(
 function generatePathOperations(
   startValue: number,
   path: Point[],
-  operations: Operation[],
+  operations: readonly Operation[],
   required?: Operation,
 ): TileData[] {
   let current = startValue
@@ -150,19 +150,19 @@ function generatePathOperations(
 
 function getRequiredOperation(level: number): Operation | undefined {
   switch (level) {
-    case 2:
-      return '-'
-    case 3:
-      return '*'
     case 4:
+      return '-'
+    case 8:
+      return '*'
+    case 16:
       return '/'
     default:
       return undefined
   }
 }
 
-function generateRandomTile(operations: Operation[]): TileData {
-  const operation = choose(operations)
+function generateRandomTile(operations: readonly Operation[]): TileData {
+  const operation = choose([...operations])
   let value = randomTileValue()
   if (operation === '/') {
     value = Math.max(2, value)
@@ -181,7 +181,7 @@ function fillRemainingTiles(
   startX: number,
   startY: number,
   pathTiles: TileData[],
-  operations: Operation[],
+  operations: readonly Operation[],
   level: number,
 ): TileData[] {
   const tiles = [...pathTiles]
@@ -194,10 +194,17 @@ function fillRemainingTiles(
 
   const allowEmpty = level >= GAME.EMPTY_TILE_LEVEL
 
+  const emptyChance = allowEmpty
+    ? Math.min(
+        GAME.EMPTY_TILE_MIN_CHANCE + (level - GAME.EMPTY_TILE_LEVEL) * 0.02,
+        GAME.EMPTY_TILE_MAX_CHANCE,
+      )
+    : 0
+
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       if (occupied.has(String(x) + ',' + String(y))) continue
-      if (allowEmpty && Math.random() < GAME.EMPTY_TILE_CHANCE) continue
+      if (Math.random() < emptyChance) continue
       const tile = generateRandomTile(operations)
       tile.x = x
       tile.y = y
