@@ -15,6 +15,13 @@ Play in the browser:
 
 - [remarkablegames](https://remarkablegames.org/number-bumper/)
 
+## Features
+
+- **Math operations** — addition, subtraction, multiplication, and division
+- **Procedurally generated levels** — every playthrough is unique with levels of increasing difficulty
+- **Controls** — click/press adjacent tiles or use WASD/arrow keys to move
+- **Restart** — press `R` to restart the current level
+
 ## Prerequisites
 
 [nvm](https://github.com/nvm-sh/nvm#installing-and-updating):
@@ -38,21 +45,8 @@ Install the dependencies:
 npm install
 ```
 
-Rename the project:
-
-```sh
-git grep -l number-bumper | xargs sed -i '' -e 's/number-bumper/my-game/g'
-```
-
-```sh
-git grep -l 'Number Bumper' | xargs sed -i '' -e 's/Number Bumper/My Game/g'
-```
-
 Update the files:
 
-- [ ] `README.md`
-- [ ] `index.html`
-- [ ] `package.json`
 - [ ] `public/app-icon.png`
 - [ ] `public/favicon.png`
 - [ ] `public/manifest.webmanifest`
