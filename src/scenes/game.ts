@@ -65,7 +65,11 @@ function createGameUI(levelData: LevelData) {
   targetPanel.add(targetLabel)
 
   const hint = add([
-    text(getLevelConfig(levelData.level).hint, { size: 20, align: 'center' }),
+    text(getLevelConfig(levelData.level).hint, {
+      size: 20,
+      align: 'center',
+      width: screenWidth - padding * 2,
+    }),
     pos(screenWidth / 2, padding + panelHeight + 12),
     anchor('top'),
     color(GAME.UI_HINT_COLOR),
