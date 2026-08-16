@@ -35,7 +35,11 @@ export function addTile(
     : ''
 
   const labelSize =
-    tileData && tileData.value >= 100 ? GAME.TEXT_SIZE_SMALL : GAME.TEXT_SIZE
+    labelText.length > 4
+      ? GAME.TEXT_SIZE_SMALL
+      : labelText.length > 3
+        ? GAME.TEXT_SIZE - 2
+        : GAME.TEXT_SIZE
 
   const label = tileData
     ? tile.add([
