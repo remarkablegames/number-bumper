@@ -316,19 +316,16 @@ function tryMoveTo(gridX: number, gridY: number) {
     state.moves += 1
 
     if (tile.tileData) {
-      const newValue = applyOperation(
-        state.player.value,
-        tile.tileData.operation,
-        tile.tileData.value,
-      )
+      const { operation, value } = tile.tileData
+      const newValue = applyOperation(state.player.value, operation, value)
       state.operationHistory.push({
-        operation: tile.tileData.operation,
-        value: tile.tileData.value,
+        operation,
+        value,
         result: newValue,
       })
       state.player.setValue(newValue)
       tile.consume()
-      playOperationSound(tile.tileData.operation)
+      playOperationSound(operation)
 
       if (state.player.value === state.levelData.target) {
         handleWin()

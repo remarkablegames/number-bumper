@@ -37,19 +37,6 @@ export function addPlayer(level: LevelData) {
     scale(),
   ])
 
-  function popValueText() {
-    valueText.scale = vec2(GAME.POP_SCALE, GAME.POP_SCALE)
-    tween(
-      GAME.POP_SCALE,
-      1,
-      GAME.POP_DURATION,
-      (value) => {
-        valueText.scale = vec2(value)
-      },
-      easings.easeOutBack,
-    )
-  }
-
   player.scale = vec2(0)
   tween(
     player.scale,
@@ -81,7 +68,17 @@ export function addPlayer(level: LevelData) {
   return Object.assign(player, {
     setValue: (value: number) => {
       player.value = value
-      popValueText()
+
+      player.scale = vec2(GAME.POP_SCALE)
+      tween(
+        GAME.POP_SCALE,
+        1,
+        GAME.POP_DURATION,
+        (value) => {
+          player.scale = vec2(value)
+        },
+        easings.easeOutBack,
+      )
     },
     goToTile: (gridX: number, gridY: number, onArrive: () => void) => {
       if (!player.hasMoved) {

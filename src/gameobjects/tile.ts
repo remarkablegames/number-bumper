@@ -100,27 +100,11 @@ export function addTile(
     consume: () => {
       if (!tile.tileData) return
 
-      tile.paused = true
-      tween(
-        1,
-        1.3,
-        GAME.POP_DURATION,
-        (value) => {
-          tile.scale = vec2(value)
-          if (label) {
-            label.scale = vec2(value)
-          }
-        },
-        easings.easeOutCubic,
-      ).onEnd(() => {
-        if (label) {
-          destroy(label)
-        }
-        tile.tileData = null
-        tile.color = rgb(...GAME.BLANK_TILE_COLOR)
-        tile.scale = vec2(1)
-        tile.paused = false
-      })
+      if (label) {
+        destroy(label)
+      }
+      tile.tileData = null
+      tile.color = rgb(...GAME.BLANK_TILE_COLOR)
     },
   })
 }

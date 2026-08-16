@@ -31,8 +31,8 @@ export const BLOCKER_TILE_MAX_CHANCE = 0.2
 export const NEGATIVE_TARGET_LEVEL = 15
 
 export const MOVE_DURATION = 0.15
-export const POP_DURATION = 0.2
-export const POP_SCALE = 1.4
+export const POP_DURATION = 0.35
+export const POP_SCALE = 1.2
 export const HOVER_SCALE = 1.05
 export const HOVER_DURATION = 0.1
 
