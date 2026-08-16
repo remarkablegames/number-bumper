@@ -1,5 +1,11 @@
 import { GAME } from '../constants'
-import type { LevelConfig, LevelData, Operation, TileData } from '../types'
+import type {
+  EmptyConfig,
+  LevelConfig,
+  LevelData,
+  Operation,
+  TileData,
+} from '../types'
 
 interface Point {
   x: number
@@ -202,6 +208,7 @@ function fillRemainingTiles(
   pathTiles: TileData[],
   operations: readonly Operation[],
   level: number,
+  emptyConfig?: EmptyConfig,
 ): TileData[] {
   const tiles = [...pathTiles]
   const occupied = new Set(
@@ -211,14 +218,19 @@ function fillRemainingTiles(
   // Reserve the player's starting cell.
   occupied.add(String(startX) + ',' + String(startY))
 
-  const allowEmpty = level >= GAME.EMPTY_TILE_LEVEL
+  const allowEmpty = emptyConfig !== undefined || level >= GAME.EMPTY_TILE_LEVEL
 
-  const emptyChance = allowEmpty
-    ? Math.min(
-        GAME.EMPTY_TILE_MIN_CHANCE + (level - GAME.EMPTY_TILE_LEVEL) * 0.02,
-        GAME.EMPTY_TILE_MAX_CHANCE,
-      )
-    : 0
+  const emptyChance = emptyConfig
+    ? emptyConfig.chance
+    : allowEmpty
+      ? Math.min(
+          GAME.EMPTY_TILE_MIN_CHANCE + (level - GAME.EMPTY_TILE_LEVEL) * 0.02,
+          GAME.EMPTY_TILE_MAX_CHANCE,
+        )
+      : 0
+
+  const emptyMin = emptyConfig?.min ?? 0
+  const emptyMax = emptyConfig?.max ?? Infinity
 
   const allowBlockers = level >= GAME.BLOCKER_TILE_LEVEL
   const blockerChance = allowBlockers ? GAME.BLOCKER_TILE_MAX_CHANCE : 0
@@ -228,6 +240,8 @@ function fillRemainingTiles(
   ).length
   let mulDivCount = pathMulDiv
   const safeOperations = operations.filter((op) => op === '+' || op === '-')
+
+  const emptyCells: Point[] = []
 
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
@@ -243,7 +257,10 @@ function fillRemainingTiles(
         occupied.add(String(x) + ',' + String(y))
         continue
       }
-      if (Math.random() < emptyChance) continue
+      if (Math.random() < emptyChance) {
+        emptyCells.push({ x, y })
+        continue
+      }
       const availableOps =
         mulDivCount < GAME.MAX_MULTIPLY_DIVIDE_TILES
           ? operations
@@ -256,11 +273,41 @@ function fillRemainingTiles(
     }
   }
 
+  if (emptyCells.length < emptyMin) {
+    const nonPathTiles = tiles.filter(
+      (tile) => !tile.blocker && !pathTiles.includes(tile),
+    )
+    const toRemove = emptyMin - emptyCells.length
+    for (
+      let index = 0;
+      index < toRemove && index < nonPathTiles.length;
+      index++
+    ) {
+      const tile = nonPathTiles[index]
+      const removeIndex = tiles.indexOf(tile)
+      tiles.splice(removeIndex, 1)
+    }
+  } else if (emptyCells.length > emptyMax) {
+    const toFill = emptyCells.length - emptyMax
+    for (let index = 0; index < toFill; index++) {
+      const cell = emptyCells[index]
+      const availableOps =
+        mulDivCount < GAME.MAX_MULTIPLY_DIVIDE_TILES
+          ? operations
+          : safeOperations
+      const tile = generateRandomTile(availableOps, level)
+      if (tile.operation === '*' || tile.operation === '/') mulDivCount++
+      tile.x = cell.x
+      tile.y = cell.y
+      tiles.push(tile)
+    }
+  }
+
   return tiles
 }
 
 export function generateLevel(level: number): LevelData {
-  const { width, height, operations } = getLevelConfig(level)
+  const { width, height, operations, empty } = getLevelConfig(level)
   const startValue = randi(GAME.MIN_START_VALUE, GAME.MAX_START_VALUE)
   const startX = randi(0, width - 1)
   const startY = randi(0, height - 1)
@@ -320,6 +367,7 @@ export function generateLevel(level: number): LevelData {
       pathTiles,
       operations,
       level,
+      empty,
     )
     return {
       level,
@@ -357,6 +405,7 @@ export function generateLevel(level: number): LevelData {
       ],
       ['+'],
       level,
+      empty,
     ),
   }
 }

@@ -19,10 +19,17 @@ export interface LevelData {
   tiles: TileData[]
 }
 
+export interface EmptyConfig {
+  chance: number
+  min: number
+  max: number
+}
+
 export interface LevelConfig {
   level: number
   width: number
   height: number
   operations: readonly Operation[]
   hint: string
+  empty?: EmptyConfig
 }

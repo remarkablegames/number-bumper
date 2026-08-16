@@ -173,6 +173,7 @@ export const LEVEL_CONFIGS = [
     height: 4,
     operations: ['+', '-'] as const,
     hint: 'Room to roam',
+    empty: { chance: 0.3, min: 1, max: 2 },
   },
   {
     level: 8,
@@ -180,6 +181,7 @@ export const LEVEL_CONFIGS = [
     height: 4,
     operations: ['+', '-', '*'] as const,
     hint: 'Times are changing',
+    empty: { chance: 0.25, min: 1, max: 2 },
   },
   {
     level: 9,
@@ -187,6 +189,7 @@ export const LEVEL_CONFIGS = [
     height: 4,
     operations: ['+', '-', '*'] as const,
     hint: 'Multiply your options',
+    empty: { chance: 0.2, min: 1, max: 1 },
   },
   {
     level: 10,
@@ -194,6 +197,7 @@ export const LEVEL_CONFIGS = [
     height: 4,
     operations: ['+', '-', '*'] as const,
     hint: 'Product of your choices',
+    empty: { chance: 0.15, min: 1, max: 1 },
   },
   {
     level: 11,
