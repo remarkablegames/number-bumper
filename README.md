@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/favicon.png" width="200" alt="Number Bumper">
+  <img src="public/logo.svg" width="200" alt="Number Bumper">
 </p>
 
 # Number Bumper
@@ -50,12 +50,6 @@ Install the dependencies:
 ```sh
 npm install
 ```
-
-Update the files:
-
-- [ ] `public/app-icon.png`
-- [ ] `public/favicon.png`
-- [ ] `public/manifest.webmanifest`
 
 ## Environment Variables
 
