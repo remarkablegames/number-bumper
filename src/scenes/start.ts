@@ -1,3 +1,4 @@
+import './cover'
 import './game'
 import './preload'
 import './title'
