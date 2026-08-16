@@ -1,5 +1,5 @@
 import { AUDIO, GAME } from '../constants'
-import { gridToWorld, playSound } from '../helpers'
+import { getTextSizeForLength, gridToWorld, playSound } from '../helpers'
 import type { LevelData, TileData } from '../types'
 
 export function addTile(
@@ -40,12 +40,7 @@ export function addTile(
       ? GAME.OPERATION_SYMBOLS[tileData.operation] + String(tileData.value)
       : ''
 
-  const labelSize =
-    labelText.length > 4
-      ? GAME.TEXT_SIZE_SMALL
-      : labelText.length > 3
-        ? GAME.TEXT_SIZE - 2
-        : GAME.TEXT_SIZE
+  const labelSize = getTextSizeForLength(labelText.length)
 
   const label = tileData
     ? tile.add([

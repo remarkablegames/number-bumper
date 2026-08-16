@@ -1,5 +1,5 @@
 import { GAME } from '../constants'
-import { gridToWorld } from '../helpers'
+import { getTextSizeForLength, gridToWorld } from '../helpers'
 import type { LevelData } from '../types'
 
 export function addPlayer(level: LevelData) {
@@ -52,8 +52,7 @@ export function addPlayer(level: LevelData) {
 
   player.onUpdate(() => {
     valueText.text = String(player.value)
-    valueText.textSize =
-      player.value >= 100 ? GAME.TEXT_SIZE_SMALL : GAME.TEXT_SIZE
+    valueText.textSize = getTextSizeForLength(String(player.value).length)
 
     if (!player.hasMoved) {
       const pulse = 1 + Math.sin(time() * 4) * 0.04
