@@ -7,6 +7,7 @@ import {
   getLevelConfig,
   isMobile,
   isMuted,
+  isTouchscreen,
   playMusic,
   playOperationSound,
   playSound,
@@ -82,7 +83,7 @@ function createGameUI(levelData: LevelData) {
       ])
     : null
 
-  const mobile = isMobile()
+  const touchscreen = isTouchscreen()
 
   const levelLabel = add([
     text('Level: ' + String(levelData.level), { size: GAME.UI_TEXT_SIZE }),
@@ -102,7 +103,7 @@ function createGameUI(levelData: LevelData) {
     scale(0),
   ])
 
-  const restartText = mobile
+  const restartText = touchscreen
     ? null
     : add([
         text('R: Restart', { size: GAME.UI_TEXT_SIZE }),
@@ -116,7 +117,7 @@ function createGameUI(levelData: LevelData) {
   const restartHint = addButton(
     '↻',
     {
-      pos: vec2(padding + (mobile ? 0 : 110), screenHeight - padding),
+      pos: vec2(padding + (touchscreen ? 0 : 110), screenHeight - padding),
       anchor: 'botleft',
       textSize: 28,
       padding: 12,
@@ -125,7 +126,7 @@ function createGameUI(levelData: LevelData) {
     restartLevel,
   )
 
-  const muteHint = mobile
+  const muteHint = touchscreen
     ? null
     : add([
         text('M: Mute', { size: GAME.UI_TEXT_SIZE }),
