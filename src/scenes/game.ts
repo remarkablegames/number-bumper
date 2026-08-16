@@ -1,5 +1,5 @@
 import { AUDIO, GAME, SCENE } from '../constants'
-import { addButton, addPlayer, addTile } from '../gameobjects'
+import { addButton, addEquation, addPlayer, addTile } from '../gameobjects'
 import {
   addFloatingSymbols,
   applyOperation,
@@ -240,32 +240,17 @@ function handleWin() {
     fixed(),
   ])
 
-  const equationText = buildEquation()
-  const equationLabel = make([
-    text(equationText, {
-      size: 22,
-      align: 'center',
-    }),
-    color(GAME.WIN_SECONDARY_TEXT_COLOR),
-    pos(),
-    anchor('center'),
-  ])
-
-  const maxEquationWidth = Math.min(modalWidth, 600)
-
-  if (equationLabel.width > maxEquationWidth) {
-    equationLabel.width = maxEquationWidth
-  }
-
-  const equationPanelPadding = 20
-  const equationPanelHeight = Math.max(
-    44,
-    equationLabel.height + equationPanelPadding * 2,
-  )
+  const equationPanel = addEquation(buildEquation())
 
   const gap = 16
   const totalHeight =
-    title.height + gap + movesText.height + gap + equationPanelHeight + gap + 60
+    title.height +
+    gap +
+    movesText.height +
+    gap +
+    equationPanel.height +
+    gap +
+    60
   const startY = height() / 2 - totalHeight / 2
 
   title.pos = vec2(width() / 2, startY + title.height / 2)
@@ -277,25 +262,15 @@ function handleWin() {
   )
   add(movesText)
 
-  const equationPanel = add([
-    rect(equationLabel.width + equationPanelPadding * 2, equationPanelHeight, {
-      radius: 10,
-    }),
-    color(BLACK),
-    opacity(0.4),
-    pos(
-      width() / 2,
-      startY +
-        title.height +
-        gap +
-        movesText.height +
-        gap +
-        equationPanelHeight / 2,
-    ),
-    anchor('center'),
-    fixed(),
-  ])
-  equationPanel.add(equationLabel)
+  equationPanel.pos = vec2(
+    width() / 2,
+    startY +
+      title.height +
+      gap +
+      movesText.height +
+      gap +
+      equationPanel.height / 2,
+  )
 
   function goNext() {
     destroy(overlay)
@@ -316,7 +291,7 @@ function handleWin() {
           gap +
           movesText.height +
           gap +
-          equationPanelHeight +
+          equationPanel.height +
           gap +
           30,
       ),
