@@ -20,9 +20,13 @@ export const MAX_MULTIPLY_DIVIDE_TILES = 2
 
 export const MAX_VALUE = 1000
 
-export const EMPTY_TILE_LEVEL = 11
+export const EMPTY_TILE_LEVEL = 8
 export const EMPTY_TILE_MIN_CHANCE = 0.1
 export const EMPTY_TILE_MAX_CHANCE = 0.3
+
+export const BLOCKER_TILE_LEVEL = 12
+export const BLOCKER_TILE_MIN_COUNT = 1
+export const BLOCKER_TILE_MAX_CHANCE = 0.2
 
 export const NEGATIVE_TARGET_LEVEL = 15
 
@@ -40,6 +44,7 @@ export const MODAL_SUBTITLE_SIZE = 32
 
 export const BACKGROUND_COLOR: [number, number, number] = [225, 235, 250]
 export const BLANK_TILE_COLOR: [number, number, number] = [245, 250, 255]
+export const BLOCKER_TILE_COLOR: [number, number, number] = [100, 100, 105]
 
 export const OPERATIONS = ['+', '-', '*', '/'] as const
 
@@ -57,7 +62,8 @@ export const OPERATION_SYMBOLS: Record<Operation, string> = {
   '/': '÷',
 }
 
-export const PLAYER_COLOR: [number, number, number] = [80, 80, 80]
+export const PLAYER_COLOR: [number, number, number] = [240, 240, 245]
+export const PLAYER_TEXT_COLOR: [number, number, number] = [60, 60, 70]
 
 export const UI_PADDING = 12
 export const UI_TEXT_SIZE = 22

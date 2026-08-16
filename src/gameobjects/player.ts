@@ -31,7 +31,7 @@ export function addPlayer(level: LevelData) {
 
   const valueText = player.add([
     text(String(level.startValue), { size: GAME.TEXT_SIZE, align: 'center' }),
-    color(GAME.TEXT_COLOR),
+    color(...GAME.PLAYER_TEXT_COLOR),
     pos(),
     anchor('center'),
     scale(),

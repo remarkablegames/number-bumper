@@ -220,6 +220,9 @@ function fillRemainingTiles(
       )
     : 0
 
+  const allowBlockers = level >= GAME.BLOCKER_TILE_LEVEL
+  const blockerChance = allowBlockers ? GAME.BLOCKER_TILE_MAX_CHANCE : 0
+
   const pathMulDiv = pathTiles.filter(
     (tile) => tile.operation === '*' || tile.operation === '/',
   ).length
@@ -229,6 +232,17 @@ function fillRemainingTiles(
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       if (occupied.has(String(x) + ',' + String(y))) continue
+      if (allowBlockers && Math.random() < blockerChance) {
+        tiles.push({
+          x,
+          y,
+          operation: '+',
+          value: 0,
+          blocker: true,
+        })
+        occupied.add(String(x) + ',' + String(y))
+        continue
+      }
       if (Math.random() < emptyChance) continue
       const availableOps =
         mulDivCount < GAME.MAX_MULTIPLY_DIVIDE_TILES

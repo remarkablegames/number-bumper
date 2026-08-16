@@ -284,6 +284,7 @@ function tryMoveTo(gridX: number, gridY: number) {
   const tileKey = String(gridX) + ',' + String(gridY)
   const tile = state.tiles.get(tileKey)
   if (!tile) return
+  if (tile.tileData?.blocker) return
 
   playSound(AUDIO.SOUND_KEYS.move)
 
@@ -309,7 +310,8 @@ function tryMoveTo(gridX: number, gridY: number) {
         handleWin()
       } else {
         const hasTilesLeft = Array.from(state.tiles.values()).some(
-          (tile) => !tile.paused && tile.tileData !== null,
+          (tile) =>
+            !tile.paused && tile.tileData !== null && !tile.tileData.blocker,
         )
         if (!hasTilesLeft) {
           handleLose()
@@ -494,6 +496,7 @@ function setupScene(level: number) {
         },
         () => {
           if (state.player.isMoving || state.isComplete) return false
+          if (tileData?.blocker) return false
           const dx = Math.abs(gridX - state.player.gridX)
           const dy = Math.abs(gridY - state.player.gridY)
           return dx + dy === 1

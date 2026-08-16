@@ -5,6 +5,7 @@ export interface TileData {
   y: number
   operation: Operation
   value: number
+  blocker?: boolean
 }
 
 export interface LevelData {

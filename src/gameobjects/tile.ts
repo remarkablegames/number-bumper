@@ -12,14 +12,18 @@ export function addTile(
 ) {
   const position = gridToWorld(x, y, level.width, level.height)
 
+  const isBlocker = tileData?.blocker === true
+
   const tile = add([
     rect(GAME.TILE_RENDER_SIZE, GAME.TILE_RENDER_SIZE, {
       radius: GAME.TILE_RADIUS,
     }),
     color(
-      ...(tileData
-        ? GAME.OPERATION_COLORS[tileData.operation]
-        : GAME.BLANK_TILE_COLOR),
+      ...(isBlocker
+        ? GAME.BLOCKER_TILE_COLOR
+        : tileData
+          ? GAME.OPERATION_COLORS[tileData.operation]
+          : GAME.BLANK_TILE_COLOR),
     ),
     pos(position),
     anchor('center'),
@@ -30,9 +34,11 @@ export function addTile(
     },
   ])
 
-  const labelText = tileData
-    ? GAME.OPERATION_SYMBOLS[tileData.operation] + String(tileData.value)
-    : ''
+  const labelText = isBlocker
+    ? ''
+    : tileData
+      ? GAME.OPERATION_SYMBOLS[tileData.operation] + String(tileData.value)
+      : ''
 
   const labelSize =
     labelText.length > 4
@@ -52,13 +58,14 @@ export function addTile(
     : null
 
   tile.onClick(() => {
+    if (isBlocker) return
     if (!tile.paused) {
       onClick()
     }
   })
 
   tile.onHover(() => {
-    if (!canClick()) return
+    if (isBlocker || !canClick()) return
     setCursor('pointer')
     if (tileData) {
       playSound(AUDIO.SOUND_KEYS.hoverTile)
@@ -78,7 +85,7 @@ export function addTile(
   })
 
   tile.onHoverEnd(() => {
-    if (!canClick()) return
+    if (isBlocker || !canClick()) return
     setCursor('default')
     tween(
       tile.scale,
