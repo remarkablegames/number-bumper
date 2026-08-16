@@ -222,6 +222,15 @@ function handleWin() {
   ])
   equationPanel.add(equationLabel)
 
+  const goNext = () => {
+    destroy(overlay)
+    destroy(title)
+    destroy(movesText)
+    destroy(equationPanel)
+    destroy(nextButton)
+    go(SCENE.GAME, { level: state.level + 1 })
+  }
+
   const nextButton = addButton(
     'Next Level',
     {
@@ -230,15 +239,10 @@ function handleWin() {
       padding: 32,
       radius: 8,
     },
-    () => {
-      destroy(overlay)
-      destroy(title)
-      destroy(movesText)
-      destroy(equationPanel)
-      destroy(nextButton)
-      go(SCENE.GAME, { level: state.level + 1 })
-    },
+    goNext,
   )
+
+  onKeyPress(['space', 'enter'], goNext)
 
   for (let index = 0; index < 30; index++) {
     const confetti = add([
