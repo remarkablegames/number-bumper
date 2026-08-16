@@ -240,16 +240,22 @@ function handleWin() {
     fixed(),
   ])
 
+  const equationText = buildEquation()
   const equationLabel = make([
-    text(buildEquation(), {
+    text(equationText, {
       size: 22,
       align: 'center',
-      width: modalWidth,
     }),
     color(GAME.WIN_SECONDARY_TEXT_COLOR),
     pos(),
     anchor('center'),
   ])
+
+  const maxEquationWidth = Math.min(modalWidth, 600)
+
+  if (equationLabel.width > maxEquationWidth) {
+    equationLabel.width = maxEquationWidth
+  }
 
   const equationPanelPadding = 20
   const equationPanelHeight = Math.max(
