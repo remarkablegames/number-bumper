@@ -26,6 +26,7 @@ Play in the browser:
 
 - [FREE Background Music for Visual Novels vol.1](https://d-wheat-music.itch.io/free-background-music-for-dating-sim-vol1) by [D-wheat music](https://d-wheat-music.itch.io/)
 - [Universal UI/Menu Soundpack](https://cyrex-studios.itch.io/universal-ui-soundpack) by [Nathan Gibson](https://nathangibson.myportfolio.com)
+- [Nunito](https://fonts.google.com/specimen/Nunito) font
 
 ## Prerequisites
 
