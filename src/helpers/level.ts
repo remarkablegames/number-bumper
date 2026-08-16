@@ -72,12 +72,13 @@ function isValidOperation(
   current: number,
   operation: Operation,
   value: number,
+  allowNegative: boolean,
 ): boolean {
   switch (operation) {
     case '+':
       return current + value <= GAME.MAX_VALUE
     case '-':
-      return value <= current
+      return allowNegative || value <= current
     case '*':
       return current * value <= GAME.MAX_VALUE
     case '/':
@@ -94,14 +95,18 @@ function chooseOperation(
   current: number,
   operations: readonly Operation[],
   level: number,
+  allowNegative: boolean,
   required?: Operation,
 ): Operation {
-  if (required && isValidOperation(current, required, randomTileValue(level))) {
+  if (
+    required &&
+    isValidOperation(current, required, randomTileValue(level), allowNegative)
+  ) {
     return required
   }
 
   const valid = operations.filter((operation) =>
-    isValidOperation(current, operation, randomTileValue(level)),
+    isValidOperation(current, operation, randomTileValue(level), allowNegative),
   )
   if (!valid.length) return operations[0]
   return choose(valid)
@@ -111,12 +116,13 @@ function clampValueForOperation(
   current: number,
   operation: Operation,
   value: number,
+  allowNegative: boolean,
 ): number {
   switch (operation) {
     case '+':
       return Math.min(value, GAME.MAX_VALUE - current)
     case '-':
-      return Math.min(value, current)
+      return allowNegative ? value : Math.min(value, current)
     case '*':
       if (current === 0) return value
       return Math.min(value, Math.floor(GAME.MAX_VALUE / current))
@@ -130,6 +136,7 @@ function generatePathOperations(
   path: Point[],
   operations: readonly Operation[],
   level: number,
+  allowNegative: boolean,
   required?: Operation,
 ): TileData[] {
   let current = startValue
@@ -145,11 +152,11 @@ function generatePathOperations(
     const availableOps = canMulDiv ? operations : safeOperations
     const operation =
       index - 1 === requiredIndex
-        ? chooseOperation(current, availableOps, level, required)
-        : chooseOperation(current, availableOps, level)
+        ? chooseOperation(current, availableOps, level, allowNegative, required)
+        : chooseOperation(current, availableOps, level, allowNegative)
     if (operation === '*' || operation === '/') mulDivCount++
     let value = randomTileValue(level)
-    value = clampValueForOperation(current, operation, value)
+    value = clampValueForOperation(current, operation, value, allowNegative)
     current = applyOperation(current, operation, value)
     tiles.push({ x: point.x, y: point.y, operation, value })
   }
@@ -243,6 +250,7 @@ export function generateLevel(level: number): LevelData {
   const startValue = randi(GAME.MIN_START_VALUE, GAME.MAX_START_VALUE)
   const startX = randi(0, width - 1)
   const startY = randi(0, height - 1)
+  const allowNegative = level >= GAME.NEGATIVE_TARGET_LEVEL
 
   const pathLength = Math.min(
     Math.max(2, level + 1),
@@ -269,6 +277,7 @@ export function generateLevel(level: number): LevelData {
       path,
       operations,
       level,
+      allowNegative,
       required,
     )
 
@@ -282,8 +291,12 @@ export function generateLevel(level: number): LevelData {
       })),
     )
 
-    if (target < 1) continue
-    if (target < level) continue
+    if (allowNegative) {
+      if (target < -GAME.MAX_VALUE) continue
+    } else {
+      if (target < 1) continue
+    }
+    if (target < level && target > -level) continue
 
     const allTiles = fillRemainingTiles(
       width,

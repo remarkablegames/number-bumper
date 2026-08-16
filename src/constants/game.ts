@@ -24,6 +24,8 @@ export const EMPTY_TILE_LEVEL = 11
 export const EMPTY_TILE_MIN_CHANCE = 0.1
 export const EMPTY_TILE_MAX_CHANCE = 0.3
 
+export const NEGATIVE_TARGET_LEVEL = 15
+
 export const MOVE_DURATION = 0.15
 export const POP_DURATION = 0.2
 export const POP_SCALE = 1.4
