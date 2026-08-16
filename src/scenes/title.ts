@@ -16,7 +16,7 @@ scene(SCENE.TITLE, () => {
   ])
 
   add([
-    text('Reach the target by chaining operation tiles', {
+    text('Bump the number. Hit the goal.', {
       size: 22,
       align: 'center',
     }),
