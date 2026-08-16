@@ -60,7 +60,6 @@ function createGameUI(levelData: LevelData) {
     pos(screenWidth / 2, padding + panelHeight / 2),
     anchor('center'),
     fixed(),
-    opacity(0),
     scale(0),
   ])
   targetPanel.add(targetLabel)
@@ -71,7 +70,6 @@ function createGameUI(levelData: LevelData) {
     anchor('top'),
     color(GAME.UI_HINT_COLOR),
     fixed(),
-    opacity(0),
     scale(0),
   ])
 
@@ -81,7 +79,6 @@ function createGameUI(levelData: LevelData) {
     anchor('botright'),
     color(GAME.UI_TEXT_COLOR),
     fixed(),
-    opacity(0),
     scale(0),
   ])
 
@@ -91,7 +88,6 @@ function createGameUI(levelData: LevelData) {
     anchor('botright'),
     color(GAME.UI_TEXT_COLOR),
     fixed(),
-    opacity(0),
     scale(0),
   ])
 
@@ -101,7 +97,6 @@ function createGameUI(levelData: LevelData) {
     anchor('botleft'),
     color(GAME.UI_HINT_COLOR),
     fixed(),
-    opacity(0),
     scale(0),
   ])
 
@@ -111,7 +106,6 @@ function createGameUI(levelData: LevelData) {
     anchor('botleft'),
     color(GAME.UI_HINT_COLOR),
     fixed(),
-    opacity(0),
     scale(0),
   ])
 
@@ -123,13 +117,6 @@ function createGameUI(levelData: LevelData) {
     restartHint,
     muteHint,
   ]) {
-    tween(
-      el.opacity,
-      1,
-      0.4,
-      (value) => (el.opacity = value),
-      easings.easeOutQuad,
-    )
     tween(
       el.scale,
       vec2(1),

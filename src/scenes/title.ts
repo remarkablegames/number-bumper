@@ -21,7 +21,7 @@ scene(SCENE.TITLE, () => {
     pos(),
     anchor('center'),
     color(GAME.UI_TEXT_COLOR),
-    opacity(0),
+    scale(0),
   ])
 
   const subtitle = make([
@@ -32,7 +32,7 @@ scene(SCENE.TITLE, () => {
     pos(),
     anchor('center'),
     color(GAME.UI_HINT_COLOR),
-    opacity(0),
+    scale(0),
   ])
 
   title.pos = center().sub(0, HALF_LOGO + title.height / 2.5)
@@ -41,13 +41,7 @@ scene(SCENE.TITLE, () => {
   add(title)
   add(subtitle)
 
-  const logo = add([
-    sprite('logo'),
-    pos(center()),
-    anchor('center'),
-    scale(0),
-    opacity(0),
-  ])
+  const logo = add([sprite('logo'), pos(center()), anchor('center'), scale(0)])
 
   tween(
     logo.scale,
@@ -56,27 +50,20 @@ scene(SCENE.TITLE, () => {
     (value) => (logo.scale = value),
     easings.easeOutBack,
   )
-  tween(
-    logo.opacity,
-    1,
-    0.4,
-    (value) => (logo.opacity = value),
-    easings.easeOutQuad,
-  )
 
   tween(
-    title.opacity,
-    1,
+    title.scale,
+    vec2(1),
     0.5,
-    (value) => (title.opacity = value),
-    easings.easeOutQuad,
+    (value) => (title.scale = value),
+    easings.easeOutBack,
   ).onEnd(() => {
     tween(
-      subtitle.opacity,
-      1,
+      subtitle.scale,
+      vec2(1),
       0.5,
-      (value) => (subtitle.opacity = value),
-      easings.easeOutQuad,
+      (value) => (subtitle.scale = value),
+      easings.easeOutBack,
     )
   })
 
