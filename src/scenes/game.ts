@@ -222,7 +222,7 @@ function handleWin() {
   ])
   equationPanel.add(equationLabel)
 
-  const goNext = () => {
+  function goNext() {
     destroy(overlay)
     destroy(title)
     destroy(movesText)
@@ -364,6 +364,14 @@ function handleLose() {
     fixed(),
   ])
 
+  function retry() {
+    destroy(overlay)
+    destroy(title)
+    destroy(targetText)
+    destroy(retryButton)
+    restartLevel()
+  }
+
   const retryButton = addButton(
     'Retry',
     {
@@ -372,14 +380,10 @@ function handleLose() {
       padding: 32,
       radius: 8,
     },
-    () => {
-      destroy(overlay)
-      destroy(title)
-      destroy(targetText)
-      destroy(retryButton)
-      restartLevel()
-    },
+    retry,
   )
+
+  onKeyPress(['space', 'enter'], retry)
 }
 
 function restartLevel() {
