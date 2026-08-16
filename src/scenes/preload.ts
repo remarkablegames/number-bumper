@@ -6,5 +6,12 @@ scene(SCENE.PRELOAD, () => {
     loadSound(key, path)
   }
   loadMusic(AUDIO.MUSIC_KEY, AUDIO.MUSIC)
-  go(SCENE.TITLE)
+
+  const params = new URLSearchParams(location.search)
+  const level = Number(params.get('level'))
+  if (level > 0) {
+    go(SCENE.GAME, { level })
+  } else {
+    go(SCENE.TITLE)
+  }
 })
