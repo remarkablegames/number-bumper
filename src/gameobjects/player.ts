@@ -14,7 +14,7 @@ export function addPlayer(level: LevelData) {
     rect(GAME.TILE_RENDER_SIZE, GAME.TILE_RENDER_SIZE, {
       radius: GAME.TILE_RADIUS,
     }),
-    color(...GAME.PLAYER_COLOR),
+    color(GAME.PLAYER_COLOR),
     pos(startPosition),
     anchor('center'),
     outline(4, WHITE),
@@ -31,7 +31,7 @@ export function addPlayer(level: LevelData) {
 
   const valueText = player.add([
     text(String(level.startValue), { size: GAME.TEXT_SIZE, align: 'center' }),
-    color(...GAME.PLAYER_TEXT_COLOR),
+    color(GAME.PLAYER_TEXT_COLOR),
     pos(),
     anchor('center'),
     scale(),

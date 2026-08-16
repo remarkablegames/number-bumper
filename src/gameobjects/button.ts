@@ -31,7 +31,7 @@ export function addButton(
 
   const button = add([
     rect(label.width + padding * 2, textSize + 24, { radius }),
-    color(...GAME.NEXT_BUTTON_COLOR),
+    color(GAME.NEXT_BUTTON_COLOR),
     pos(position),
     anchor(buttonAnchor),
     area(),

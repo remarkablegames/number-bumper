@@ -55,7 +55,7 @@ function createGameUI(levelData: LevelData) {
 
   const targetPanel = add([
     rect(targetLabel.width + panelPadding * 2, panelHeight, { radius: 12 }),
-    color(...GAME.OPERATION_COLORS['*']),
+    color(GAME.OPERATION_COLORS['*']),
     pos(screenWidth / 2, padding + panelHeight / 2),
     anchor('center'),
     fixed(),
@@ -66,7 +66,7 @@ function createGameUI(levelData: LevelData) {
     text(getLevelConfig(levelData.level).hint, { size: 20, align: 'center' }),
     pos(screenWidth / 2, padding + panelHeight + 12),
     anchor('top'),
-    color(...GAME.UI_HINT_COLOR),
+    color(GAME.UI_HINT_COLOR),
     fixed(),
   ])
 
@@ -74,7 +74,7 @@ function createGameUI(levelData: LevelData) {
     text('Level: ' + String(levelData.level), { size: GAME.UI_TEXT_SIZE }),
     pos(screenWidth - padding, screenHeight - padding - 30),
     anchor('botright'),
-    color(...GAME.UI_TEXT_COLOR),
+    color(GAME.UI_TEXT_COLOR),
     fixed(),
   ])
 
@@ -82,7 +82,7 @@ function createGameUI(levelData: LevelData) {
     text('Moves: 0', { size: GAME.UI_TEXT_SIZE }),
     pos(screenWidth - padding, screenHeight - padding),
     anchor('botright'),
-    color(...GAME.UI_TEXT_COLOR),
+    color(GAME.UI_TEXT_COLOR),
     fixed(),
   ])
 
@@ -90,7 +90,7 @@ function createGameUI(levelData: LevelData) {
     text('R: Restart', { size: GAME.UI_TEXT_SIZE }),
     pos(padding, screenHeight - padding),
     anchor('botleft'),
-    color(...GAME.UI_HINT_COLOR),
+    color(GAME.UI_HINT_COLOR),
     fixed(),
   ])
 
@@ -98,7 +98,7 @@ function createGameUI(levelData: LevelData) {
     text('M: Mute', { size: GAME.UI_TEXT_SIZE }),
     pos(padding, screenHeight - padding - 30),
     anchor('botleft'),
-    color(...GAME.UI_HINT_COLOR),
+    color(GAME.UI_HINT_COLOR),
     fixed(),
   ])
 
@@ -197,7 +197,7 @@ function handleWin() {
     }),
     pos(width() / 2, height() / 2 - 30),
     anchor('center'),
-    color(...GAME.WIN_SECONDARY_TEXT_COLOR),
+    color(GAME.WIN_SECONDARY_TEXT_COLOR),
     fixed(),
   ])
 
@@ -206,7 +206,7 @@ function handleWin() {
       size: 22,
       align: 'center',
     }),
-    color(...GAME.WIN_SECONDARY_TEXT_COLOR),
+    color(GAME.WIN_SECONDARY_TEXT_COLOR),
     pos(),
     anchor('center'),
   ])
@@ -360,7 +360,7 @@ function handleLose() {
     ),
     pos(width() / 2, height() / 2),
     anchor('center'),
-    color(...GAME.WIN_SECONDARY_TEXT_COLOR),
+    color(GAME.WIN_SECONDARY_TEXT_COLOR),
     fixed(),
   ])
 

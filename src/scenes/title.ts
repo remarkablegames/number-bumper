@@ -11,7 +11,7 @@ scene(SCENE.TITLE, () => {
     text('Number Bumper', { size: 56, align: 'center' }),
     pos(screenWidth / 2, screenHeight / 2 - 100),
     anchor('center'),
-    color(...GAME.UI_TEXT_COLOR),
+    color(GAME.UI_TEXT_COLOR),
     fixed(),
   ])
 
@@ -22,7 +22,7 @@ scene(SCENE.TITLE, () => {
     }),
     pos(screenWidth / 2, screenHeight / 2 - 50),
     anchor('center'),
-    color(...GAME.UI_HINT_COLOR),
+    color(GAME.UI_HINT_COLOR),
     fixed(),
   ])
 
