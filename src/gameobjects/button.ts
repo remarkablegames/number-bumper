@@ -29,8 +29,25 @@ export function addButton(
     anchor('center'),
   ])
 
+  const buttonWidth = label.width + padding * 2
+  const buttonHeight = textSize + 24
+
+  const anchorOffsets: Record<Anchor, Vec2> = {
+    center: vec2(0, 0),
+    top: vec2(0, buttonHeight / 2),
+    bot: vec2(0, -buttonHeight / 2),
+    left: vec2(buttonWidth / 2, 0),
+    right: vec2(-buttonWidth / 2, 0),
+    topleft: vec2(buttonWidth / 2, buttonHeight / 2),
+    topright: vec2(-buttonWidth / 2, buttonHeight / 2),
+    botleft: vec2(buttonWidth / 2, -buttonHeight / 2),
+    botright: vec2(-buttonWidth / 2, -buttonHeight / 2),
+  }
+
+  label.pos = anchorOffsets[buttonAnchor]
+
   const button = add([
-    rect(label.width + padding * 2, textSize + 24, { radius }),
+    rect(buttonWidth, buttonHeight, { radius }),
     color(GAME.NEXT_BUTTON_COLOR),
     pos(position),
     anchor(buttonAnchor),

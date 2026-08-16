@@ -82,6 +82,8 @@ function createGameUI(levelData: LevelData) {
       ])
     : null
 
+  const mobile = isMobile()
+
   const levelLabel = add([
     text('Level: ' + String(levelData.level), { size: GAME.UI_TEXT_SIZE }),
     pos(screenWidth - padding, screenHeight - padding - 30),
@@ -100,30 +102,47 @@ function createGameUI(levelData: LevelData) {
     scale(0),
   ])
 
-  const restartHint = add([
-    text('R: Restart', { size: GAME.UI_TEXT_SIZE }),
-    pos(padding, screenHeight - padding),
-    anchor('botleft'),
-    color(GAME.UI_HINT_COLOR),
-    fixed(),
-    scale(0),
-  ])
+  const restartText = mobile
+    ? null
+    : add([
+        text('R: Restart', { size: GAME.UI_TEXT_SIZE }),
+        pos(padding, screenHeight - padding),
+        anchor('botleft'),
+        color(GAME.UI_HINT_COLOR),
+        fixed(),
+        scale(0),
+      ])
 
-  const muteHint = add([
-    text('M: Mute', { size: GAME.UI_TEXT_SIZE }),
-    pos(padding, screenHeight - padding - 30),
-    anchor('botleft'),
-    color(GAME.UI_HINT_COLOR),
-    fixed(),
-    scale(0),
-  ])
+  const restartHint = addButton(
+    '↻',
+    {
+      pos: vec2(padding + (mobile ? 0 : 110), screenHeight - padding),
+      anchor: 'botleft',
+      textSize: 28,
+      padding: 12,
+      radius: 8,
+    },
+    restartLevel,
+  )
+
+  const muteHint = mobile
+    ? null
+    : add([
+        text('M: Mute', { size: GAME.UI_TEXT_SIZE }),
+        pos(padding, screenHeight - padding - 30),
+        anchor('botleft'),
+        color(GAME.UI_HINT_COLOR),
+        fixed(),
+        scale(0),
+      ])
 
   const uiElements = [
     targetPanel,
     levelLabel,
     movesLabel,
     restartHint,
-    muteHint,
+    ...(restartText ? [restartText] : []),
+    ...(muteHint ? [muteHint] : []),
     ...(hint ? [hint] : []),
   ]
 
