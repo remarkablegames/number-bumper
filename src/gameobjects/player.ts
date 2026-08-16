@@ -50,11 +50,22 @@ export function addPlayer(level: LevelData) {
     )
   }
 
+  player.scale = vec2(0)
+  tween(
+    player.scale,
+    vec2(1),
+    0.4,
+    (value) => {
+      player.scale = value
+    },
+    easings.easeOutBack,
+  )
+
   player.onUpdate(() => {
     valueText.text = String(player.value)
     valueText.textSize = getTextSizeForLength(String(player.value).length)
 
-    if (!player.hasMoved) {
+    if (!player.hasMoved && player.scale.eq(vec2(1))) {
       const pulse = 1 + Math.sin(time() * 4) * 0.04
       player.scale = vec2(pulse)
     }

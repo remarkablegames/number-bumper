@@ -1,6 +1,7 @@
 import { AUDIO, GAME, SCENE } from '../constants'
 import { addButton, addPlayer, addTile } from '../gameobjects'
 import {
+  addFloatingSymbols,
   applyOperation,
   generateLevel,
   getLevelConfig,
@@ -59,15 +60,19 @@ function createGameUI(levelData: LevelData) {
     pos(screenWidth / 2, padding + panelHeight / 2),
     anchor('center'),
     fixed(),
+    opacity(0),
+    scale(0),
   ])
   targetPanel.add(targetLabel)
 
-  add([
+  const hint = add([
     text(getLevelConfig(levelData.level).hint, { size: 20, align: 'center' }),
     pos(screenWidth / 2, padding + panelHeight + 12),
     anchor('top'),
     color(GAME.UI_HINT_COLOR),
     fixed(),
+    opacity(0),
+    scale(0),
   ])
 
   const levelLabel = add([
@@ -76,6 +81,8 @@ function createGameUI(levelData: LevelData) {
     anchor('botright'),
     color(GAME.UI_TEXT_COLOR),
     fixed(),
+    opacity(0),
+    scale(0),
   ])
 
   const movesLabel = add([
@@ -84,23 +91,53 @@ function createGameUI(levelData: LevelData) {
     anchor('botright'),
     color(GAME.UI_TEXT_COLOR),
     fixed(),
+    opacity(0),
+    scale(0),
   ])
 
-  add([
+  const restartHint = add([
     text('R: Restart', { size: GAME.UI_TEXT_SIZE }),
     pos(padding, screenHeight - padding),
     anchor('botleft'),
     color(GAME.UI_HINT_COLOR),
     fixed(),
+    opacity(0),
+    scale(0),
   ])
 
-  add([
+  const muteHint = add([
     text('M: Mute', { size: GAME.UI_TEXT_SIZE }),
     pos(padding, screenHeight - padding - 30),
     anchor('botleft'),
     color(GAME.UI_HINT_COLOR),
     fixed(),
+    opacity(0),
+    scale(0),
   ])
+
+  for (const el of [
+    targetPanel,
+    hint,
+    levelLabel,
+    movesLabel,
+    restartHint,
+    muteHint,
+  ]) {
+    tween(
+      el.opacity,
+      1,
+      0.4,
+      (value) => (el.opacity = value),
+      easings.easeOutQuad,
+    )
+    tween(
+      el.scale,
+      vec2(1),
+      0.5,
+      (value) => (el.scale = value),
+      easings.easeOutBack,
+    )
+  }
 
   return { targetLabel, levelLabel, movesLabel }
 }
@@ -471,6 +508,9 @@ function createMuteIcon() {
 
 function setupScene(level: number) {
   setBackground(...GAME.BACKGROUND_COLOR)
+
+  addFloatingSymbols(0.15)
+
   playMusic()
   createMuteIcon()
 
@@ -509,6 +549,26 @@ function setupScene(level: number) {
       )
       tiles.set(String(gridX) + ',' + String(gridY), tile)
     }
+  }
+
+  const centerX = (levelData.width - 1) / 2
+  const centerY = (levelData.height - 1) / 2
+
+  for (const [key, tile] of tiles) {
+    const [gx, gy] = key.split(',').map(Number)
+    const dist = Math.sqrt((gx - centerX) ** 2 + (gy - centerY) ** 2)
+    const delay = dist * 0.04
+
+    tile.scale = vec2(0)
+    wait(delay, () => {
+      tween(
+        tile.scale,
+        vec2(1),
+        0.3,
+        (value) => (tile.scale = value),
+        easings.easeOutBack,
+      )
+    })
   }
 
   const player = addPlayer(levelData)
