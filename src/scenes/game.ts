@@ -122,6 +122,7 @@ function createGameUI(levelData: LevelData) {
       textSize: 28,
       padding: 12,
       radius: 8,
+      color: GAME.RESTART_BUTTON_COLOR,
     },
     restartLevel,
   )

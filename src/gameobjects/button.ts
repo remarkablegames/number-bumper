@@ -11,6 +11,7 @@ export function addButton(
     textSize?: number
     padding?: number
     radius?: number
+    color?: [number, number, number]
   },
   onClick: () => void,
 ) {
@@ -20,6 +21,7 @@ export function addButton(
     textSize = 24,
     padding = 48,
     radius = 12,
+    color: buttonColor = GAME.DEFAULT_BUTTON_COLOR,
   } = options
 
   const label = make([
@@ -48,7 +50,7 @@ export function addButton(
 
   const button = add([
     rect(buttonWidth, buttonHeight, { radius }),
-    color(GAME.NEXT_BUTTON_COLOR),
+    color(buttonColor),
     pos(position),
     anchor(buttonAnchor),
     area(),
