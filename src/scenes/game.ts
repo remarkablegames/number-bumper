@@ -203,23 +203,27 @@ function handleWin() {
     fixed(),
   ])
 
-  const title = add([
+  const modalWidth = width() - 80
+
+  const title = make([
     text('Level Complete ✅', {
       size: GAME.MODAL_TITLE_SIZE,
       align: 'center',
+      width: modalWidth,
     }),
-    pos(width() / 2, height() / 2 - 80),
+    pos(),
     anchor('center'),
     color(WHITE),
     fixed(),
   ])
 
-  const movesText = add([
+  const movesText = make([
     text('Moves: ' + String(state.moves), {
       size: GAME.MODAL_SUBTITLE_SIZE,
       align: 'center',
+      width: modalWidth,
     }),
-    pos(width() / 2, height() / 2 - 30),
+    pos(),
     anchor('center'),
     color(GAME.WIN_SECONDARY_TEXT_COLOR),
     fixed(),
@@ -229,6 +233,7 @@ function handleWin() {
     text(buildEquation(), {
       size: 22,
       align: 'center',
+      width: modalWidth,
     }),
     color(GAME.WIN_SECONDARY_TEXT_COLOR),
     pos(),
@@ -236,11 +241,40 @@ function handleWin() {
   ])
 
   const equationPanelPadding = 20
+  const equationPanelHeight = Math.max(
+    44,
+    equationLabel.height + equationPanelPadding * 2,
+  )
+
+  const gap = 16
+  const totalHeight =
+    title.height + gap + movesText.height + gap + equationPanelHeight + gap + 60
+  const startY = height() / 2 - totalHeight / 2
+
+  title.pos = vec2(width() / 2, startY + title.height / 2)
+  add(title)
+
+  movesText.pos = vec2(
+    width() / 2,
+    startY + title.height + gap + movesText.height / 2,
+  )
+  add(movesText)
+
   const equationPanel = add([
-    rect(equationLabel.width + equationPanelPadding * 2, 44, { radius: 10 }),
+    rect(equationLabel.width + equationPanelPadding * 2, equationPanelHeight, {
+      radius: 10,
+    }),
     color(BLACK),
     opacity(0.4),
-    pos(width() / 2, height() / 2 + 30),
+    pos(
+      width() / 2,
+      startY +
+        title.height +
+        gap +
+        movesText.height +
+        gap +
+        equationPanelHeight / 2,
+    ),
     anchor('center'),
     fixed(),
   ])
@@ -258,7 +292,17 @@ function handleWin() {
   const nextButton = addButton(
     'Next Level',
     {
-      pos: vec2(width() / 2, height() / 2 + 100),
+      pos: vec2(
+        width() / 2,
+        startY +
+          title.height +
+          gap +
+          movesText.height +
+          gap +
+          equationPanelHeight +
+          gap +
+          30,
+      ),
       textSize: 24,
       padding: 32,
       radius: 8,
