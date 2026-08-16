@@ -33,6 +33,8 @@ export const HOVER_DURATION = 0.1
 export const TEXT_SIZE = 24
 export const TEXT_SIZE_SMALL = 18
 export const TEXT_COLOR = WHITE
+export const MODAL_TITLE_SIZE = 40
+export const MODAL_SUBTITLE_SIZE = 32
 
 export const BACKGROUND_COLOR: [number, number, number] = [225, 235, 250]
 export const BLANK_TILE_COLOR: [number, number, number] = [245, 250, 255]

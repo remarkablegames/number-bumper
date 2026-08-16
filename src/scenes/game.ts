@@ -181,7 +181,7 @@ function handleWin() {
 
   const title = add([
     text('Level Complete ✅', {
-      size: 40,
+      size: GAME.MODAL_TITLE_SIZE,
       align: 'center',
     }),
     pos(width() / 2, height() / 2 - 80),
@@ -192,7 +192,7 @@ function handleWin() {
 
   const movesText = add([
     text('Moves: ' + String(state.moves), {
-      size: 32,
+      size: GAME.MODAL_SUBTITLE_SIZE,
       align: 'center',
     }),
     pos(width() / 2, height() / 2 - 30),
@@ -303,11 +303,77 @@ function tryMoveTo(gridX: number, gridY: number) {
 
       if (state.player.value === state.levelData.target) {
         handleWin()
+      } else {
+        const hasTilesLeft = Array.from(state.tiles.values()).some(
+          (tile) => !tile.paused && tile.tileData !== null,
+        )
+        if (!hasTilesLeft) {
+          handleLose()
+        }
       }
     }
 
     updateUI()
   })
+}
+
+function handleLose() {
+  state.isComplete = true
+
+  for (const tile of state.tiles.values()) {
+    tile.paused = true
+  }
+
+  const overlay = add([
+    rect(width(), height()),
+    color(BLACK),
+    opacity(0.7),
+    pos(),
+    anchor('topleft'),
+    fixed(),
+  ])
+
+  const title = add([
+    text('No Moves Left 😵', {
+      size: GAME.MODAL_TITLE_SIZE,
+      align: 'center',
+    }),
+    pos(width() / 2, height() / 2 - 70),
+    anchor('center'),
+    color(WHITE),
+    fixed(),
+  ])
+
+  const targetText = add([
+    text(
+      `Goal: ${String(state.levelData.target)}\nCurrent: ${String(state.player.value)}`,
+      {
+        size: GAME.MODAL_SUBTITLE_SIZE,
+        align: 'center',
+      },
+    ),
+    pos(width() / 2, height() / 2),
+    anchor('center'),
+    color(...GAME.WIN_SECONDARY_TEXT_COLOR),
+    fixed(),
+  ])
+
+  const retryButton = addButton(
+    'Retry',
+    {
+      pos: vec2(width() / 2, height() / 2 + 80),
+      textSize: 24,
+      padding: 32,
+      radius: 8,
+    },
+    () => {
+      destroy(overlay)
+      destroy(title)
+      destroy(targetText)
+      destroy(retryButton)
+      restartLevel()
+    },
+  )
 }
 
 function restartLevel() {
