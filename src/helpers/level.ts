@@ -387,7 +387,7 @@ export function getLevelConfig(level: number): LevelConfig {
       8,
     ),
     operations: GAME.LEVEL_CONFIGS[GAME.LEVEL_CONFIGS.length - 1].operations,
-    hint: GAME.LEVEL_CONFIGS[GAME.LEVEL_CONFIGS.length - 1].hint,
+    hint: GAME.RANDOM_HINTS[randi(0, GAME.RANDOM_HINTS.length)],
   }
 }
 

@@ -1,12 +1,12 @@
 import { GAME, SCENE } from '../constants'
 import { addButton } from '../gameobjects'
-import { addFloatingSymbols } from '../helpers'
+import { addFloatingSymbols, isMobile } from '../helpers'
 
 const LOGO_HEIGHT = 512 * 0.5
 const HALF_LOGO = LOGO_HEIGHT / 2
 
 scene(SCENE.TITLE, () => {
-  const isMobile = width() < 450
+  const mobile = isMobile()
 
   setBackground(...GAME.BACKGROUND_COLOR)
 
@@ -25,7 +25,7 @@ scene(SCENE.TITLE, () => {
   ])
 
   const subtitle = make([
-    text(`Bump the number.${isMobile ? '\n' : ' '}Hit the goal.`, {
+    text(`Bump the number.${mobile ? '\n' : ' '}Hit the goal.`, {
       size: 30,
       align: 'center',
     }),

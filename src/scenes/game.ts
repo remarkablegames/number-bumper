@@ -5,6 +5,7 @@ import {
   applyOperation,
   generateLevel,
   getLevelConfig,
+  isMobile,
   isMuted,
   playMusic,
   playOperationSound,
@@ -64,18 +65,22 @@ function createGameUI(levelData: LevelData) {
   ])
   targetPanel.add(targetLabel)
 
-  const hint = add([
-    text(getLevelConfig(levelData.level).hint, {
-      size: 20,
-      align: 'center',
-      width: screenWidth - padding * 2,
-    }),
-    pos(screenWidth / 2, padding + panelHeight + 12),
-    anchor('top'),
-    color(GAME.UI_HINT_COLOR),
-    fixed(),
-    scale(0),
-  ])
+  const showHint = !(isMobile() && levelData.width >= 8)
+
+  const hint = showHint
+    ? add([
+        text(getLevelConfig(levelData.level).hint, {
+          size: 20,
+          align: 'center',
+          width: screenWidth - padding * 2,
+        }),
+        pos(screenWidth / 2, padding + panelHeight + 12),
+        anchor('top'),
+        color(GAME.UI_HINT_COLOR),
+        fixed(),
+        scale(0),
+      ])
+    : null
 
   const levelLabel = add([
     text('Level: ' + String(levelData.level), { size: GAME.UI_TEXT_SIZE }),
@@ -113,14 +118,16 @@ function createGameUI(levelData: LevelData) {
     scale(0),
   ])
 
-  for (const el of [
+  const uiElements = [
     targetPanel,
-    hint,
     levelLabel,
     movesLabel,
     restartHint,
     muteHint,
-  ]) {
+    ...(hint ? [hint] : []),
+  ]
+
+  for (const el of uiElements) {
     tween(
       el.scale,
       vec2(1),
