@@ -512,14 +512,6 @@ function tryMoveTo(gridX: number, gridY: number) {
     if (state.mode === 'limitedMoves' && state.movesRemaining !== undefined) {
       state.movesRemaining -= 1
       pulseConstraintLabel()
-      if (
-        state.movesRemaining <= 0 &&
-        state.player.value !== state.levelData.target
-      ) {
-        updateUI()
-        handleLose()
-        return
-      }
     }
 
     if (tile.tileData) {
@@ -545,6 +537,17 @@ function tryMoveTo(gridX: number, gridY: number) {
           handleLose()
         }
       }
+    }
+
+    if (
+      state.mode === 'limitedMoves' &&
+      state.movesRemaining !== undefined &&
+      state.movesRemaining <= 0 &&
+      !state.isComplete
+    ) {
+      updateUI()
+      handleLose()
+      return
     }
 
     updateUI()
