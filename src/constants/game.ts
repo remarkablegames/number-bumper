@@ -76,7 +76,7 @@ export const WIN_SECONDARY_TEXT_COLOR: [number, number, number] = [
   200, 210, 225,
 ]
 
-export const MODE_TIME_LIMIT = (level: number) => 20 + level * 3
+export const MODE_TIME_LIMIT = (level: number) => 10 + 8 * Math.sqrt(level)
 export const MODE_MOVE_LIMIT = (level: number) => Math.max(5, level + 2)
 export const MODE_TIME_CARRYOVER_RATIO = 0.1
 export const MODE_MOVE_CARRYOVER_TIERS = [
