@@ -13,7 +13,11 @@ With quick levels, instant feedback, and growing difficulty, it’s great practi
 
 Play in the browser:
 
+- [itch.io](https://remarkablegames.itch.io/number-bumper)
+- [Wavedash](https://wavedash.com/games/number-bumper)
 - [remarkablegames](https://remarkablegames.org/number-bumper/)
+
+Read the [blog post](https://remarkablegames.org/posts/number-bumper/).
 
 ## How to Play
 
