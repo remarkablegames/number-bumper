@@ -5,6 +5,7 @@ import type { GameMode } from '../types'
 
 const LOGO_HEIGHT = 512 * 0.5
 const HALF_LOGO = LOGO_HEIGHT / 2
+const CONTAINER_OFFSET_Y = -60
 
 scene(SCENE.TITLE, () => {
   const mobile = isMobile()
@@ -13,7 +14,9 @@ scene(SCENE.TITLE, () => {
 
   addFloatingSymbols(0.25)
 
-  const title = make([
+  const container = add([pos(center().add(0, CONTAINER_OFFSET_Y)), fixed()])
+
+  const title = container.add([
     text('Number Bumper', {
       size: 56,
       align: 'center',
@@ -24,8 +27,9 @@ scene(SCENE.TITLE, () => {
     color(GAME.UI_TEXT_COLOR),
     scale(0),
   ])
+  title.pos = vec2(0, -(HALF_LOGO + title.height / 2.5))
 
-  const subtitle = make([
+  const subtitle = container.add([
     text(`Bump the number.${mobile ? '\n' : ' '}Hit the goal.`, {
       size: 30,
       align: 'center',
@@ -35,14 +39,14 @@ scene(SCENE.TITLE, () => {
     color(GAME.UI_HINT_COLOR),
     scale(0),
   ])
+  subtitle.pos = vec2(0, HALF_LOGO + subtitle.height / 2)
 
-  title.pos = center().sub(0, HALF_LOGO + title.height / 2.5)
-  subtitle.pos = center().add(0, HALF_LOGO + subtitle.height / 2)
-
-  add(title)
-  add(subtitle)
-
-  const logo = add([sprite('logo'), pos(center()), anchor('center'), scale(0)])
+  const logo = container.add([
+    sprite('logo'),
+    pos(),
+    anchor('center'),
+    scale(0),
+  ])
 
   tween(
     logo.scale,
@@ -68,12 +72,11 @@ scene(SCENE.TITLE, () => {
     )
   })
 
-  const baseY = center().y
   logo.onUpdate(() => {
-    logo.pos = vec2(center().x, baseY + Math.sin(time() * 1.5) * 8)
+    logo.pos = vec2(0, Math.sin(time() * 1.5) * 8)
   })
 
-  const buttonStartY = HALF_LOGO + subtitle.height + 60
+  const buttonStartY = HALF_LOGO + subtitle.height / 2 + 60
   const buttonGap = 60
   const modes: {
     label: string
@@ -90,7 +93,7 @@ scene(SCENE.TITLE, () => {
     addButton(
       label,
       {
-        pos: center().add(0, buttonStartY + index * buttonGap),
+        pos: container.pos.add(0, buttonStartY + index * buttonGap),
         textSize: 26,
         padding: 16,
         color,
