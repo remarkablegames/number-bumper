@@ -76,8 +76,8 @@ export const WIN_SECONDARY_TEXT_COLOR: [number, number, number] = [
   200, 210, 225,
 ]
 
-export const MODE_TIME_LIMIT = (level: number) => 30 + level * 5
-export const MODE_MOVE_LIMIT = (level: number) => Math.max(5, level + 3)
+export const MODE_TIME_LIMIT = (level: number) => 20 + level * 3
+export const MODE_MOVE_LIMIT = (level: number) => Math.max(5, level + 2)
 export const MODE_TIME_CARRYOVER_RATIO = 0.1
 export const MODE_MOVE_CARRYOVER_TIERS = [
   { min: 0, max: 1, bonus: 0 },
@@ -89,7 +89,7 @@ export const MODE_MOVE_CARRYOVER_TIERS = [
 ] as const
 
 export const MODE_TIME_WARNING_THRESHOLD = 10
-export const MODE_MOVE_WARNING_THRESHOLD = 3
+export const MODE_MOVE_WARNING_THRESHOLD = 2
 export const MODE_WARNING_COLOR: [number, number, number] = [255, 80, 80]
 
 export const RANDOM_HINTS = [
