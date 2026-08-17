@@ -82,7 +82,7 @@ scene(SCENE.TITLE, () => {
   }[] = [
     { label: 'Classic', mode: 'classic', color: GAME.DEFAULT_BUTTON_COLOR },
     { label: 'Timed', mode: 'timed', color: [220, 60, 60] },
-    { label: 'Limited Moves', mode: 'limitedMoves', color: [60, 160, 80] },
+    { label: 'Moves', mode: 'limitedMoves', color: [60, 160, 80] },
   ]
 
   for (let index = 0; index < modes.length; index++) {
