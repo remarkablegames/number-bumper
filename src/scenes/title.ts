@@ -75,19 +75,25 @@ scene(SCENE.TITLE, () => {
 
   const buttonStartY = HALF_LOGO + subtitle.height + 60
   const buttonGap = 60
-  const modes: { label: string; mode: GameMode }[] = [
-    { label: 'Classic', mode: 'classic' },
-    { label: 'Timed', mode: 'timed' },
-    { label: 'Limited Moves', mode: 'limitedMoves' },
+  const modes: {
+    label: string
+    mode: GameMode
+    color: [number, number, number]
+  }[] = [
+    { label: 'Classic', mode: 'classic', color: GAME.DEFAULT_BUTTON_COLOR },
+    { label: 'Timed', mode: 'timed', color: [220, 60, 60] },
+    { label: 'Limited Moves', mode: 'limitedMoves', color: [60, 160, 80] },
   ]
 
   for (let index = 0; index < modes.length; index++) {
-    const { label, mode } = modes[index]
+    const { label, mode, color } = modes[index]
     addButton(
       label,
       {
         pos: center().add(0, buttonStartY + index * buttonGap),
         textSize: 26,
+        padding: 16,
+        color,
       },
       () => {
         go(SCENE.GAME, { mode })
