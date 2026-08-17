@@ -90,7 +90,9 @@ export const MODE_MOVE_CARRYOVER_TIERS = [
 
 export const MODE_TIME_WARNING_THRESHOLD = 10
 export const MODE_MOVE_WARNING_THRESHOLD = 2
-export const MODE_WARNING_COLOR: [number, number, number] = [255, 80, 80]
+
+export const ERROR_COLOR: [number, number, number] = [255, 80, 80]
+export const SUCCESS_COLOR: [number, number, number] = [80, 200, 120]
 
 export const RANDOM_HINTS = [
   'Think before you move',

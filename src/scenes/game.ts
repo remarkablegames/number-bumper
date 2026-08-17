@@ -244,7 +244,7 @@ function updateConstraintLabel() {
     const seconds = Math.max(0, Math.ceil(state.timeLeft))
     label.text = '⏱ ' + String(seconds) + 's'
     if (state.timeLeft <= GAME.MODE_TIME_WARNING_THRESHOLD) {
-      label.color = rgb(...GAME.MODE_WARNING_COLOR)
+      label.color = rgb(...GAME.ERROR_COLOR)
     } else {
       label.color = rgb(...GAME.UI_TEXT_COLOR)
     }
@@ -255,7 +255,7 @@ function updateConstraintLabel() {
   ) {
     label.text = 'Moves: ' + String(state.moves) + '/' + String(state.moveLimit)
     if (state.movesRemaining <= GAME.MODE_MOVE_WARNING_THRESHOLD) {
-      label.color = rgb(...GAME.MODE_WARNING_COLOR)
+      label.color = rgb(...GAME.ERROR_COLOR)
     } else {
       label.color = rgb(...GAME.UI_TEXT_COLOR)
     }
@@ -346,9 +346,14 @@ function handleWin() {
   const modalWidth = width() - 80
 
   const title = make([
-    text('Level Complete ✅', {
-      size: GAME.MODAL_TITLE_SIZE,
+    text('Level Complete [entity]✔[/entity]', {
       align: 'center',
+      size: GAME.MODAL_TITLE_SIZE,
+      styles: {
+        entity: {
+          color: rgb(...GAME.SUCCESS_COLOR),
+        },
+      },
       width: modalWidth,
     }),
     pos(),
@@ -577,15 +582,20 @@ function handleLose() {
 
   const loseTitle =
     state.mode === 'timed'
-      ? "Time's Up ⏰"
+      ? 'Time’s Up [entity]⏱[/entity]'
       : state.mode === 'limitedMoves'
-        ? 'Out of Moves 🚫'
-        : 'No Moves Left 😵'
+        ? 'Out of Moves [entity]✗[/entity]'
+        : 'No Moves Left [entity]✗[/entity]'
 
   const title = add([
     text(loseTitle, {
       size: GAME.MODAL_TITLE_SIZE,
       align: 'center',
+      styles: {
+        entity: {
+          color: rgb(...GAME.ERROR_COLOR),
+        },
+      },
     }),
     pos(width() / 2, height() / 2 - 70),
     anchor('center'),
