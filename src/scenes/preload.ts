@@ -1,7 +1,6 @@
 import { AUDIO, SCENE } from '../constants'
 
 scene(SCENE.PRELOAD, () => {
-  loadFont('nunito', 'fonts/Nunito.ttf')
   loadSprite('logo', 'logo.svg')
 
   for (const [key, path] of Object.entries(AUDIO.SOUNDS)) {
@@ -10,11 +9,14 @@ scene(SCENE.PRELOAD, () => {
   loadMusic(AUDIO.MUSIC_KEY, AUDIO.MUSIC)
 
   const params = new URLSearchParams(location.search)
-  const level = Number(params.get('level'))
-  const mode = params.get('mode')
-  if (level > 0) {
-    go(SCENE.GAME, { level, mode: mode ?? undefined })
-  } else {
-    go(SCENE.TITLE)
-  }
+  const level = parseInt(params.get('level') ?? '0')
+  const mode = params.get('mode') ?? undefined
+
+  loadFont('nunito', 'fonts/Nunito.ttf').onLoad(() => {
+    if (level > 0) {
+      go(SCENE.GAME, { level, mode })
+    } else {
+      go(SCENE.TITLE)
+    }
+  })
 })
