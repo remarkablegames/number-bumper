@@ -15,13 +15,17 @@ Play in the browser:
 
 - [remarkablegames](https://remarkablegames.org/number-bumper/)
 
+## How to Play
+
+- **Move** — click/press the adjacent tiles or use WASD/arrow keys to move
+- **Restart** — press `R` to restart the current level (Classic mode only)
+- **Mute** — press `M` to toggle the sound
+
 ## Features
 
 - **Math operations** — addition, subtraction, multiplication, and division
 - **Procedurally generated levels** — every playthrough is unique with levels of increasing difficulty
 - **Game modes** — Classic (no constraints), Timed (per-level countdown), and Limited Moves (per-level move limit)
-- **Controls** — click/press adjacent tiles or use WASD/arrow keys to move
-- **Restart** — press `R` to restart the current level
 
 ## Credits
 
