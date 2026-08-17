@@ -19,6 +19,7 @@ Play in the browser:
 
 - **Math operations** — addition, subtraction, multiplication, and division
 - **Procedurally generated levels** — every playthrough is unique with levels of increasing difficulty
+- **Game modes** — Classic (no constraints), Timed (per-level countdown), and Limited Moves (per-level move limit)
 - **Controls** — click/press adjacent tiles or use WASD/arrow keys to move
 - **Restart** — press `R` to restart the current level
 
@@ -97,4 +98,10 @@ To jump directly to a specific level, add a `?level=<number>` query string to th
 
 ```
 http://localhost:5173/?level=15
+```
+
+To test a specific game mode, add a `?mode=<mode>` query string. Valid modes are `classic`, `timed`, and `limitedMoves`:
+
+```
+http://localhost:5173/?mode=timed&level=5
 ```
