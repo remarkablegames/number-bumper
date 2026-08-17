@@ -11,8 +11,9 @@ scene(SCENE.PRELOAD, () => {
 
   const params = new URLSearchParams(location.search)
   const level = Number(params.get('level'))
+  const mode = params.get('mode')
   if (level > 0) {
-    go(SCENE.GAME, { level })
+    go(SCENE.GAME, { level, mode: mode ?? undefined })
   } else {
     go(SCENE.TITLE)
   }

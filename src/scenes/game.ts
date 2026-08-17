@@ -14,7 +14,7 @@ import {
   setMuteIconUpdater,
   toggleMute,
 } from '../helpers'
-import type { LevelData, Operation, Player, Tile } from '../types'
+import type { GameMode, LevelData, Operation, Player, Tile } from '../types'
 
 type GameUI = ReturnType<typeof createGameUI>
 
@@ -32,14 +32,22 @@ interface GameState {
   moves: number
   isComplete: boolean
   operationHistory: OperationStep[]
+  mode: GameMode
+  timeLeft?: number
+  initialBonusTime?: number
+  moveLimit?: number
+  movesRemaining?: number
+  initialBonusMoves?: number
+  lastConstraintValue?: number
   targetLabel: GameUI['targetLabel']
   levelLabel: GameUI['levelLabel']
   movesLabel: GameUI['movesLabel']
+  constraintLabel: GameUI['constraintLabel']
 }
 
 let state: GameState
 
-function createGameUI(levelData: LevelData) {
+function createGameUI(levelData: LevelData, mode: GameMode) {
   const screenWidth = width()
   const screenHeight = height()
   const padding = GAME.UI_PADDING
@@ -66,22 +74,39 @@ function createGameUI(levelData: LevelData) {
   ])
   targetPanel.add(targetLabel)
 
+  const isClassic = mode === 'classic'
   const showHint = !(isMobile() && levelData.width >= 8)
 
-  const hint = showHint
+  const constraintLabel = !isClassic
     ? add([
-        text(getLevelConfig(levelData.level).hint, {
+        text('', {
           size: 20,
           align: 'center',
           width: screenWidth - padding * 2,
         }),
         pos(screenWidth / 2, padding + panelHeight + 12),
         anchor('top'),
-        color(GAME.UI_HINT_COLOR),
+        color(GAME.UI_TEXT_COLOR),
         fixed(),
         scale(0),
       ])
     : null
+
+  const hint =
+    isClassic && showHint
+      ? add([
+          text(getLevelConfig(levelData.level).hint, {
+            size: 20,
+            align: 'center',
+            width: screenWidth - padding * 2,
+          }),
+          pos(screenWidth / 2, padding + panelHeight + 12),
+          anchor('top'),
+          color(GAME.UI_HINT_COLOR),
+          fixed(),
+          scale(0),
+        ])
+      : null
 
   const touchscreen = isTouchscreen()
 
@@ -146,6 +171,7 @@ function createGameUI(levelData: LevelData) {
     ...(restartText ? [restartText] : []),
     ...(muteHint ? [muteHint] : []),
     ...(hint ? [hint] : []),
+    ...(constraintLabel ? [constraintLabel] : []),
   ]
 
   for (const el of uiElements) {
@@ -158,7 +184,7 @@ function createGameUI(levelData: LevelData) {
     )
   }
 
-  return { targetLabel, levelLabel, movesLabel }
+  return { targetLabel, levelLabel, movesLabel, constraintLabel }
 }
 
 function updateCamera() {
@@ -199,6 +225,74 @@ function updateUI() {
   state.targetLabel.text = 'Goal: ' + String(state.levelData.target)
   state.levelLabel.text = 'Level: ' + String(state.levelData.level)
   state.movesLabel.text = 'Moves: ' + String(state.moves)
+
+  if (state.mode === 'limitedMoves') {
+    updateConstraintLabel()
+  }
+}
+
+function updateConstraintLabel() {
+  const label = state.constraintLabel
+  if (!label) return
+
+  if (state.mode === 'timed' && state.timeLeft !== undefined) {
+    const seconds = Math.max(0, Math.ceil(state.timeLeft))
+    label.text = '⏱ ' + String(seconds) + 's'
+    if (state.timeLeft <= GAME.MODE_TIME_WARNING_THRESHOLD) {
+      label.color = rgb(...GAME.MODE_WARNING_COLOR)
+    } else {
+      label.color = rgb(...GAME.UI_TEXT_COLOR)
+    }
+  } else if (
+    state.mode === 'limitedMoves' &&
+    state.movesRemaining !== undefined &&
+    state.moveLimit !== undefined
+  ) {
+    label.text = 'Moves: ' + String(state.moves) + '/' + String(state.moveLimit)
+    if (state.movesRemaining <= GAME.MODE_MOVE_WARNING_THRESHOLD) {
+      label.color = rgb(...GAME.MODE_WARNING_COLOR)
+    } else {
+      label.color = rgb(...GAME.UI_TEXT_COLOR)
+    }
+  }
+}
+
+function pulseConstraintLabel() {
+  const label = state.constraintLabel
+  if (!label) return
+  tween(
+    label.scale,
+    vec2(1.15),
+    0.075,
+    (value) => {
+      label.scale = value
+    },
+    easings.easeOutQuad,
+  ).onEnd(() => {
+    tween(
+      label.scale,
+      vec2(1),
+      0.075,
+      (value) => {
+        label.scale = value
+      },
+      easings.easeOutQuad,
+    )
+  })
+}
+
+function calculateTimeBonus(): number {
+  if (state.timeLeft === undefined || state.timeLeft <= 0) return 0
+  return Math.ceil(state.timeLeft * GAME.MODE_TIME_CARRYOVER_RATIO)
+}
+
+function calculateMoveBonus(): number {
+  const remaining = state.movesRemaining
+  if (remaining === undefined) return 0
+  const tier = GAME.MODE_MOVE_CARRYOVER_TIERS.find(
+    (t) => remaining >= t.min && remaining <= t.max,
+  )
+  return tier?.bonus ?? 0
 }
 
 function buildEquation(): string {
@@ -221,6 +315,15 @@ function buildEquation(): string {
 function handleWin() {
   state.isComplete = true
   playSound(AUDIO.SOUND_KEYS.win)
+
+  const timeBonus = calculateTimeBonus()
+  const moveBonus = calculateMoveBonus()
+  const bonusText =
+    state.mode === 'timed' && timeBonus > 0
+      ? 'Time bonus: +' + String(timeBonus) + 's'
+      : state.mode === 'limitedMoves' && moveBonus > 0
+        ? 'Move bonus: +' + String(moveBonus)
+        : null
 
   for (const tile of state.tiles.values()) {
     tile.paused = true
@@ -261,13 +364,31 @@ function handleWin() {
     fixed(),
   ])
 
+  const bonusTextLabel = bonusText
+    ? make([
+        text(bonusText, {
+          size: GAME.MODAL_SUBTITLE_SIZE,
+          align: 'center',
+          width: modalWidth,
+        }),
+        pos(),
+        anchor('center'),
+        color(GAME.OPERATION_COLORS['+']),
+        fixed(),
+        scale(0),
+      ])
+    : null
+
   const equationPanel = addEquation(buildEquation())
 
   const gap = 16
+  const bonusHeight = bonusTextLabel ? bonusTextLabel.height + gap : 0
   const totalHeight =
     title.height +
     gap +
     movesText.height +
+    gap +
+    bonusHeight +
     gap +
     equationPanel.height +
     gap +
@@ -283,23 +404,46 @@ function handleWin() {
   )
   add(movesText)
 
+  let afterBonusY = startY + title.height + gap + movesText.height + gap
+
+  if (bonusTextLabel) {
+    bonusTextLabel.pos = vec2(
+      width() / 2,
+      afterBonusY + bonusTextLabel.height / 2,
+    )
+    add(bonusTextLabel)
+    afterBonusY += bonusTextLabel.height + gap
+    wait(0.2, () => {
+      tween(
+        bonusTextLabel.scale,
+        vec2(1),
+        0.4,
+        (value) => {
+          bonusTextLabel.scale = value
+        },
+        easings.easeOutBack,
+      )
+    })
+  }
+
   equationPanel.pos = vec2(
     width() / 2,
-    startY +
-      title.height +
-      gap +
-      movesText.height +
-      gap +
-      equationPanel.height / 2,
+    afterBonusY + gap + equationPanel.height / 2,
   )
 
   function goNext() {
     destroy(overlay)
     destroy(title)
     destroy(movesText)
+    if (bonusTextLabel) destroy(bonusTextLabel)
     destroy(equationPanel)
     destroy(nextButton)
-    go(SCENE.GAME, { level: state.level + 1 })
+    go(SCENE.GAME, {
+      level: state.level + 1,
+      mode: state.mode,
+      bonusTime: timeBonus > 0 ? timeBonus : undefined,
+      bonusMoves: moveBonus > 0 ? moveBonus : undefined,
+    })
   }
 
   const nextButton = addButton(
@@ -307,14 +451,7 @@ function handleWin() {
     {
       pos: vec2(
         width() / 2,
-        startY +
-          title.height +
-          gap +
-          movesText.height +
-          gap +
-          equationPanel.height +
-          gap +
-          30,
+        afterBonusY + gap + equationPanel.height + gap + 30,
       ),
       textSize: 24,
       padding: 32,
@@ -372,6 +509,19 @@ function tryMoveTo(gridX: number, gridY: number) {
   state.player.goToTile(gridX, gridY, () => {
     state.moves += 1
 
+    if (state.mode === 'limitedMoves' && state.movesRemaining !== undefined) {
+      state.movesRemaining -= 1
+      pulseConstraintLabel()
+      if (
+        state.movesRemaining <= 0 &&
+        state.player.value !== state.levelData.target
+      ) {
+        updateUI()
+        handleLose()
+        return
+      }
+    }
+
     if (tile.tileData) {
       const { operation, value } = tile.tileData
       const newValue = applyOperation(state.player.value, operation, value)
@@ -417,8 +567,15 @@ function handleLose() {
     fixed(),
   ])
 
+  const loseTitle =
+    state.mode === 'timed'
+      ? "Time's Up ⏰"
+      : state.mode === 'limitedMoves'
+        ? 'Out of Moves 🚫'
+        : 'No Moves Left 😵'
+
   const title = add([
-    text('No Moves Left 😵', {
+    text(loseTitle, {
       size: GAME.MODAL_TITLE_SIZE,
       align: 'center',
     }),
@@ -465,7 +622,12 @@ function handleLose() {
 }
 
 function restartLevel() {
-  go(SCENE.GAME, { level: state.level })
+  go(SCENE.GAME, {
+    level: state.level,
+    mode: state.mode,
+    bonusTime: state.initialBonusTime,
+    bonusMoves: state.initialBonusMoves,
+  })
 }
 
 function handleInput() {
@@ -547,7 +709,12 @@ function createMuteIcon() {
   })
 }
 
-function setupScene(level: number) {
+function setupScene(
+  level: number,
+  mode: GameMode,
+  bonusTime?: number,
+  bonusMoves?: number,
+) {
   setBackground(...GAME.BACKGROUND_COLOR)
 
   addFloatingSymbols(0.15)
@@ -556,7 +723,7 @@ function setupScene(level: number) {
   createMuteIcon()
 
   const levelData = generateLevel(level)
-  const ui = createGameUI(levelData)
+  const ui = createGameUI(levelData, mode)
 
   const tiles = new Map<string, Tile>()
 
@@ -614,6 +781,15 @@ function setupScene(level: number) {
 
   const player = addPlayer(levelData)
 
+  const timeLeft =
+    mode === 'timed'
+      ? GAME.MODE_TIME_LIMIT(level) + (bonusTime ?? 0)
+      : undefined
+  const moveLimit =
+    mode === 'limitedMoves'
+      ? GAME.MODE_MOVE_LIMIT(level) + (bonusMoves ?? 0)
+      : undefined
+
   state = {
     level,
     levelData,
@@ -622,17 +798,56 @@ function setupScene(level: number) {
     moves: 0,
     isComplete: false,
     operationHistory: [],
+    mode,
+    timeLeft,
+    initialBonusTime: bonusTime,
+    moveLimit,
+    movesRemaining: moveLimit,
+    initialBonusMoves: bonusMoves,
     ...ui,
+  }
+
+  if (mode === 'timed') {
+    updateConstraintLabel()
+  } else if (mode === 'limitedMoves') {
+    updateConstraintLabel()
   }
 
   handleInput()
 
   onUpdate(() => {
     updateCamera()
+
+    if (
+      state.mode === 'timed' &&
+      state.timeLeft !== undefined &&
+      !state.isComplete
+    ) {
+      const prevSeconds = Math.ceil(state.timeLeft)
+      state.timeLeft -= dt()
+      const newSeconds = Math.ceil(state.timeLeft)
+      if (newSeconds !== prevSeconds) {
+        updateConstraintLabel()
+        pulseConstraintLabel()
+      }
+      if (state.timeLeft <= 0) {
+        state.timeLeft = 0
+        handleLose()
+      }
+    }
   })
 }
 
-scene(SCENE.GAME, (args?: { level?: number }) => {
-  const level = args?.level ?? 1
-  setupScene(level)
-})
+scene(
+  SCENE.GAME,
+  (args?: {
+    level?: number
+    mode?: GameMode
+    bonusTime?: number
+    bonusMoves?: number
+  }) => {
+    const level = args?.level ?? 1
+    const mode = args?.mode ?? 'classic'
+    setupScene(level, mode, args?.bonusTime, args?.bonusMoves)
+  },
+)

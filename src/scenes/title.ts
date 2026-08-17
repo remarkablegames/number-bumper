@@ -1,6 +1,7 @@
 import { GAME, SCENE } from '../constants'
 import { addButton } from '../gameobjects'
 import { addFloatingSymbols, isMobile } from '../helpers'
+import type { GameMode } from '../types'
 
 const LOGO_HEIGHT = 512 * 0.5
 const HALF_LOGO = LOGO_HEIGHT / 2
@@ -72,18 +73,29 @@ scene(SCENE.TITLE, () => {
     logo.pos = vec2(center().x, baseY + Math.sin(time() * 1.5) * 8)
   })
 
-  addButton(
-    'Play',
-    {
-      pos: center().add(0, HALF_LOGO + subtitle.height + 60),
-      textSize: 26,
-    },
-    () => {
-      go(SCENE.GAME)
-    },
-  )
+  const buttonStartY = HALF_LOGO + subtitle.height + 60
+  const buttonGap = 60
+  const modes: { label: string; mode: GameMode }[] = [
+    { label: 'Classic', mode: 'classic' },
+    { label: 'Timed', mode: 'timed' },
+    { label: 'Limited Moves', mode: 'limitedMoves' },
+  ]
 
-  onKeyPress(() => {
-    go(SCENE.GAME)
+  for (let index = 0; index < modes.length; index++) {
+    const { label, mode } = modes[index]
+    addButton(
+      label,
+      {
+        pos: center().add(0, buttonStartY + index * buttonGap),
+        textSize: 26,
+      },
+      () => {
+        go(SCENE.GAME, { mode })
+      },
+    )
+  }
+
+  onKeyPress(['enter', 'space'], () => {
+    go(SCENE.GAME, { mode: 'classic' })
   })
 })
