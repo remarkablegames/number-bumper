@@ -128,35 +128,40 @@ function createGameUI(levelData: LevelData, mode: GameMode) {
     scale(0),
   ])
 
-  const restartText = touchscreen
-    ? null
-    : add([
-        text('R: Restart', { size: GAME.UI_TEXT_SIZE }),
-        pos(padding, screenHeight - padding),
-        anchor('botleft'),
-        color(GAME.UI_HINT_COLOR),
-        fixed(),
-        scale(0),
-      ])
+  const canRestart = mode === 'classic'
 
-  const restartHint = addButton(
-    '↻',
-    {
-      pos: vec2(padding + (touchscreen ? 0 : 110), screenHeight - padding),
-      anchor: 'botleft',
-      textSize: 28,
-      padding: 12,
-      radius: 8,
-      color: GAME.RESTART_BUTTON_COLOR,
-    },
-    restartLevel,
-  )
+  const restartText =
+    touchscreen || !canRestart
+      ? null
+      : add([
+          text('R: Restart', { size: GAME.UI_TEXT_SIZE }),
+          pos(padding, screenHeight - padding),
+          anchor('botleft'),
+          color(GAME.UI_HINT_COLOR),
+          fixed(),
+          scale(0),
+        ])
+
+  const restartButton = canRestart
+    ? addButton(
+        '↻',
+        {
+          pos: vec2(padding + (touchscreen ? 0 : 110), screenHeight - padding),
+          anchor: 'botleft',
+          textSize: 28,
+          padding: 12,
+          radius: 8,
+          color: GAME.RESTART_BUTTON_COLOR,
+        },
+        restartLevel,
+      )
+    : null
 
   const muteHint = touchscreen
     ? null
     : add([
         text('M: Mute', { size: GAME.UI_TEXT_SIZE }),
-        pos(padding, screenHeight - padding - 30),
+        pos(padding, screenHeight - padding - (canRestart ? 30 : 0)),
         anchor('botleft'),
         color(GAME.UI_HINT_COLOR),
         fixed(),
@@ -167,7 +172,7 @@ function createGameUI(levelData: LevelData, mode: GameMode) {
     targetPanel,
     levelLabel,
     movesLabel,
-    restartHint,
+    ...(restartButton ? [restartButton] : []),
     ...(restartText ? [restartText] : []),
     ...(muteHint ? [muteHint] : []),
     ...(hint ? [hint] : []),
@@ -602,26 +607,33 @@ function handleLose() {
     fixed(),
   ])
 
-  function retry() {
+  const isClassic = state.mode === 'classic'
+  const buttonText = isClassic ? 'Retry' : 'Back to Title'
+
+  function restart() {
     destroy(overlay)
     destroy(title)
     destroy(targetText)
-    destroy(retryButton)
-    restartLevel()
+    destroy(restartButton)
+    if (isClassic) {
+      restartLevel()
+    } else {
+      go(SCENE.TITLE)
+    }
   }
 
-  const retryButton = addButton(
-    'Retry',
+  const restartButton = addButton(
+    buttonText,
     {
       pos: vec2(width() / 2, height() / 2 + 80),
       textSize: 24,
       padding: 32,
       radius: 8,
     },
-    retry,
+    restart,
   )
 
-  onKeyPress(['space', 'enter'], retry)
+  onKeyPress(['space', 'enter'], restart)
 }
 
 function restartLevel() {
@@ -655,7 +667,7 @@ function handleInput() {
         tryMoveTo(state.player.gridX, state.player.gridY + 1)
         break
       case 'r':
-        restartLevel()
+        if (state.mode === 'classic') restartLevel()
         break
       case 'm':
         toggleMute()
