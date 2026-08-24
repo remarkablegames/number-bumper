@@ -17,7 +17,7 @@ Play in the browser:
 - [Wavedash](https://wavedash.com/games/number-bumper)
 - [remarkablegames](https://remarkablegames.org/number-bumper/)
 
-Read the [blog post](https://remarkablegames.org/posts/number-bumper/).
+Read the [blog post](https://remarkablegames.org/posts/number-bumper/) or watch the [YouTube Short](https://www.youtube.com/shorts/PvzzkhROAdE).
 
 ## How to Play
 
