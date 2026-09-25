@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <style>
+      text { font-family: 'Nunito', 'Arial Rounded MT Bold', 'Helvetica Rounded', Arial, sans-serif; }
+    </style>
+  </defs>
+
+  <!-- Blank tiles between operations (below player tile) -->
+  <rect x="196" y="56" width="120" height="120" rx="14" fill="#F5FAFF"/>
+  <rect x="56" y="196" width="120" height="120" rx="14" fill="#F5FAFF"/>
+  <rect x="336" y="196" width="120" height="120" rx="14" fill="#F5FAFF"/>
+  <rect x="196" y="336" width="120" height="120" rx="14" fill="#F5FAFF"/>
+
+  <!-- Operation tiles in corners (below player tile) -->
+  <rect x="56" y="56" width="120" height="120" rx="14" fill="#FFAF64"/>
+  <text x="116" y="116" font-size="56" font-weight="800" fill="#FFFFFF" text-anchor="middle" dominant-baseline="central">+</text>
+
+  <rect x="336" y="56" width="120" height="120" rx="14" fill="#C391FF"/>
+  <text x="396" y="116" font-size="56" font-weight="800" fill="#FFFFFF" text-anchor="middle" dominant-baseline="central">&#8722;</text>
+
+  <rect x="56" y="336" width="120" height="120" rx="14" fill="#5FDC8C"/>
+  <text x="116" y="396" font-size="56" font-weight="800" fill="#FFFFFF" text-anchor="middle" dominant-baseline="central">&#215;</text>
+
+  <rect x="336" y="336" width="120" height="120" rx="14" fill="#5FAFFF"/>
+  <text x="396" y="396" font-size="56" font-weight="800" fill="#FFFFFF" text-anchor="middle" dominant-baseline="central">&#247;</text>
+
+  <!-- Central player tile (on top) -->
+  <rect x="156" y="156" width="200" height="200" rx="18" fill="#3C3C46" stroke="#FFFFFF" stroke-width="6"/>
+  <text x="256" y="256" font-size="120" font-weight="800" fill="#FFFFFF" text-anchor="middle" dominant-baseline="central">7</text>
+</svg>
